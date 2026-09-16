@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>রিল আর্কাইভ — Movie / Series / Natok Catalog</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#100e0c;
+    --panel:#1b1712;
+    --panel-2:#221d17;
+    --line:#3a332a;
+    --text:#efe7d8;
+    --muted:#9c9284;
+    --gold:#c89b3c;
+    --gold-dim:#8a6e2e;
+    --red:#a4432f;
+    --red-dim:#7c3524;
+    --radius:2px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--ink);
+    color:var(--text);
+    font-family:'Work Sans',sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    letter-spacing:-0.01em;
+    margin:0;
+  }
+  a{color:inherit;}
+  ::selection{background:var(--gold);color:var(--ink);}
+
+  /* ---------- Masthead ---------- */
+  header.masthead{
+    border-bottom:1px solid var(--line);
+    padding:22px 32px;
+    position:sticky;
+    top:0;
+    background:rgba(16,14,12,0.94);
+    backdrop-filter:blur(6px);
+    z-index:40;
+  }
+  .masthead-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:24px;
+    max-width:1180px;
+    margin:0 auto;
+    flex-wrap:wrap;
+  }
+  .brand{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+  }
+  .brand .display{font-size:26px;}
+  .brand .tag{font-size:12px;color:var(--muted);border-left:1px solid var(--line);padding-left:10px;}
+  .masthead-tools{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    flex:1;
+    justify-content:flex-end;
+    min-width:280px;
+  }
+  .search-box{
+    flex:1;
+    max-width:360px;
+    position:relative;
+  }
+  .search-box input{
+    width:100%;
+    background:var(--panel);
+    border:1px solid var(--line);
+    color:var(--text);
+    padding:9px 12px;
+    font-family:'Work Sans',sans-serif;
+    font-size:14px;
+    border-radius:var(--radius);
+  }
+  .search-box input:focus{outline:1px solid var(--gold);border-color:var(--gold);}
+  .search-box input::placeholder{color:var(--muted);}
+  .btn{
+    background:transparent;
+    border:1px solid var(--line);
+    color:var(--text);
+    padding:9px 16px;
+    font-family:'Work Sans',sans-serif;
+    font-size:14px;
+    font-weight:500;
+    cursor:pointer;
+    border-radius:var(--radius);
+    transition:border-color .15s ease, color .15s ease;
+    white-space:nowrap;
+  }
+  .btn:hover{border-color:var(--gold);color:var(--gold);}
+  .btn-gold{background:var(--gold);color:var(--ink);border-color:var(--gold);font-weight:600;}
+  .btn-gold:hover{background:#dcb355;color:var(--ink);}
+  .btn-red{background:var(--red);color:#f3e6df;border-color:var(--red);}
+  .btn-red:hover{background:#bf5137;}
+  .btn-ghost{border-color:transparent;color:var(--muted);}
+  .btn-ghost:hover{color:var(--gold);border-color:var(--line);}
+
+  /* ---------- Category chips ---------- */
+  .chip-row{
+    max-width:1180px;
+    margin:14px auto 0;
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    padding:0 32px;
+  }
+  .chip{
+    font-size:12.5px;
+    padding:6px 13px;
+    border:1px solid var(--line);
+    border-radius:20px;
+    color:var(--muted);
+    cursor:pointer;
+    background:transparent;
+    font-family:'Work Sans',sans-serif;
+  }
+  .chip.active{border-color:var(--gold);color:var(--gold);}
+  .chip.private-chip{border-color:var(--red-dim);}
+  .chip.private-chip.active{border-color:var(--red);color:#e2a794;}
+
+  /* ---------- Hero ---------- */
+  .hero{
+    max-width:1180px;
+    margin:40px auto 8px;
+    padding:0 32px;
+  }
+  .hero-label{
+    font-size:11.5px;
+    letter-spacing:.08em;
+    color:var(--gold-dim);
+    margin-bottom:10px;
+  }
+  .hero-card{
+    border:1px solid var(--line);
+    background:linear-gradient(120deg,var(--panel),var(--panel-2));
+    display:grid;
+    grid-template-columns:220px 1fr;
+    gap:0;
+    cursor:pointer;
+  }
+  .hero-poster{
+    background:var(--panel-2);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-right:1px solid var(--line);
+    min-height:280px;
+    background-size:cover;
+    background-position:center;
+  }
+  .hero-poster .fallback-num{
+    font-family:'Fraunces',serif;
+    font-size:52px;
+    color:var(--gold-dim);
+  }
+  .hero-body{padding:30px 34px;display:flex;flex-direction:column;justify-content:center;gap:10px;}
+  .hero-body h2{font-size:32px;}
+  .hero-meta{color:var(--muted);font-size:13.5px;}
+  .hero-meta span{margin-right:14px;}
+  .hero-body p.hero-cat{
+    color:var(--gold);
+    font-size:12.5px;
+    text-transform:none;
+    margin:0;
+  }
+
+  /* ---------- Catalog grid ---------- */
+  main{max-width:1180px;margin:0 auto;padding:34px 32px 80px;}
+  .section-head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    border-bottom:1px solid var(--line);
+    padding-bottom:10px;
+    margin-bottom:20px;
+  }
+  .section-head h3{font-size:19px;}
+  .count-tag{font-size:12.5px;color:var(--muted);}
+
+  .grid{display:block;}
+  .grid-inner{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(168px,1fr));
+    gap:22px 18px;
+  }
+  .year-group{margin-bottom:36px;}
+  .year-group:last-child{margin-bottom:0;}
+  .year-group-head{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:16px;
+  }
+  .year-group-head h4{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:21px;
+    color:var(--gold);
+    white-space:nowrap;
+    margin:0;
+  }
+  .year-group-line{flex:1;height:1px;background:var(--line);}
+  .card{
+    cursor:pointer;
+    display:flex;
+    flex-direction:column;
+  }
+  .card-poster{
+    aspect-ratio:2/3;
+    background:var(--panel);
+    border:1px solid var(--line);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    overflow:hidden;
+    background-size:cover;
+    background-position:center;
+  }
+  .card-poster .entry-no{
+    position:absolute;
+    top:8px;
+    left:8px;
+    font-size:11px;
+    color:var(--muted);
+    border:1px solid var(--line);
+    padding:1px 6px;
+    background:rgba(16,14,12,0.7);
+  }
+  .card-poster .fallback-title{
+    font-family:'Fraunces',serif;
+    font-size:15px;
+    color:var(--muted);
+    text-align:center;
+    padding:14px;
+  }
+  .card-poster .cat-tag{
+    position:absolute;
+    bottom:8px;
+    right:8px;
+    font-size:10.5px;
+    color:var(--gold);
+    background:rgba(16,14,12,0.75);
+    border:1px solid var(--gold-dim);
+    padding:1px 6px;
+  }
+  .card:hover .card-poster{border-color:var(--gold);}
+  .card-title{font-size:14px;font-weight:600;margin-top:9px;}
+  .card-sub{font-size:12px;color:var(--muted);margin-top:2px;}
+
+  .empty-state{
+    color:var(--muted);
+    font-size:14px;
+    padding:50px 0;
+    text-align:center;
+    border:1px dashed var(--line);
+  }
+
+  /* ---------- Modal shared ---------- */
+  .overlay{
+    position:fixed;inset:0;
+    background:rgba(9,8,6,0.82);
+    display:none;
+    align-items:flex-start;
+    justify-content:center;
+    padding:50px 20px;
+    overflow-y:auto;
+    z-index:100;
+  }
+  .overlay.show{display:flex;}
+  .modal{
+    background:var(--panel);
+    border:1px solid var(--line);
+    width:100%;
+    max-width:640px;
+    animation:rise .18s ease;
+  }
+  @keyframes rise{from{transform:translateY(8px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+  .modal-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:18px 22px;
+    border-bottom:1px solid var(--line);
+  }
+  .modal-head h3{font-size:18px;}
+  .modal-close{cursor:pointer;color:var(--muted);font-size:20px;background:none;border:none;}
+  .modal-close:hover{color:var(--gold);}
+  .modal-body{padding:22px;}
+
+  /* Detail modal */
+  .detail-meta-row{display:flex;flex-wrap:wrap;gap:16px;color:var(--muted);font-size:13px;margin-bottom:16px;}
+  .detail-meta-row strong{color:var(--text);font-weight:600;}
+  .watch-frame-wrap{
+    border:1px solid var(--line);
+    background:#000;
+    aspect-ratio:16/9;
+    margin-bottom:16px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+  }
+  .watch-frame-wrap iframe,.watch-frame-wrap video{width:100%;height:100%;border:0;}
+  .watch-fallback{
+    color:var(--muted);
+    font-size:13px;
+    text-align:center;
+    padding:20px;
+  }
+  .action-row{display:flex;gap:10px;flex-wrap:wrap;}
+
+  /* Admin / form modal */
+  .field{margin-bottom:14px;}
+  .field label{display:block;font-size:12.5px;color:var(--muted);margin-bottom:5px;}
+  .field input,.field select{
+    width:100%;
+    background:var(--ink);
+    border:1px solid var(--line);
+    color:var(--text);
+    padding:9px 11px;
+    font-family:'Work Sans',sans-serif;
+    font-size:14px;
+    border-radius:var(--radius);
+  }
+  .field input:focus,.field select:focus{outline:1px solid var(--gold);border-color:var(--gold);}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .field-check{display:flex;align-items:center;gap:9px;margin-bottom:14px;}
+  .field-check input{width:auto;}
+  .field-check label{font-size:13px;color:var(--text);margin:0;}
+  .inline-link-btn{
+    background:none;border:none;color:var(--gold-dim);
+    font-family:'Work Sans',sans-serif;font-size:12.5px;
+    text-decoration:underline;cursor:pointer;padding:0;margin-top:4px;
+  }
+  .inline-link-btn:hover{color:var(--gold);}
+  .form-msg{font-size:13px;margin-top:10px;min-height:18px;}
+  .form-msg.err{color:#d17a63;}
+  .form-msg.ok{color:#8fbf7a;}
+  .hint{font-size:12px;color:var(--muted);margin-top:-6px;margin-bottom:14px;}
+
+  footer{
+    border-top:1px solid var(--line);
+    padding:26px 32px;
+    text-align:center;
+    color:var(--muted);
+    font-size:12.5px;
+  }
+
+  @media (max-width:640px){
+    .hero-card{grid-template-columns:1fr;}
+    .hero-poster{min-height:180px;border-right:none;border-bottom:1px solid var(--line);}
+    .field-row{grid-template-columns:1fr;}
+    .masthead-row{flex-direction:column;align-items:stretch;}
+    .masthead-tools{justify-content:stretch;}
+  }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead-row">
+    <div class="brand">
+      <h1 class="display">রিল আর্কাইভ</h1>
+      <span class="tag">Movie · Series · Natok Catalog</span>
+    </div>
+    <div class="masthead-tools">
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="নাম, বছর, দেশ বা ভাষা দিয়ে খুঁজুন...">
+      </div>
+      <button class="btn" id="adminBtn">অ্যাডমিন</button>
+    </div>
+  </div>
+  <div class="chip-row" id="chipRow">
+    <button class="chip active" data-cat="all">সব</button>
+    <button class="chip" data-cat="Movie">মুভি</button>
+    <button class="chip" data-cat="Series">সিরিজ</button>
+    <button class="chip" data-cat="Natok">নাটক</button>
+    <button class="chip private-chip" data-cat="Private" id="privateChip">🔒 প্রাইভেট</button>
+  </div>
+</header>
+
+<div class="hero" id="heroWrap" style="display:none;">
+  <div class="hero-label">সদ্য যোগ হয়েছে</div>
+  <div class="hero-card" id="heroCard"></div>
+</div>
+
+<main>
+  <div class="section-head">
+    <h3>ক্যাটালগ</h3>
+    <span class="count-tag" id="countTag">0 এন্ট্রি</span>
+  </div>
+  <div class="grid" id="grid"></div>
+  <div class="empty-state" id="emptyState" style="display:none;">
+    কোনো এন্ট্রি পাওয়া যায়নি। সার্চ বা ফিল্টার পরিবর্তন করে দেখুন।
+  </div>
+</main>
+
+<footer>রিল আর্কাইভ — শুধুমাত্র নিজের তৈরি বা বৈধভাবে শেয়ারযোগ্য কনটেন্টের জন্য।</footer>
+
+<!-- Detail modal -->
+<div class="overlay" id="detailOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="detailTitle">—</h3>
+      <button class="modal-close" id="detailClose">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="detail-meta-row" id="detailMeta"></div>
+      <div class="watch-frame-wrap" id="watchWrap"></div>
+      <div class="action-row">
+        <a class="btn btn-gold" id="watchLinkBtn" target="_blank" rel="noopener">নতুন ট্যাবে দেখুন</a>
+        <a class="btn btn-red" id="downloadLinkBtn" target="_blank" rel="noopener">ডাউনলোড</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Admin login modal -->
+<div class="overlay" id="loginOverlay">
+  <div class="modal" style="max-width:380px;">
+    <div class="modal-head">
+      <h3>অ্যাডমিন লগইন</h3>
+      <button class="modal-close" id="loginClose">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>পাসওয়ার্ড</label>
+        <input type="password" id="loginPassword" placeholder="••••••••">
+      </div>
+      <button class="btn btn-gold" id="loginSubmit" style="width:100%;">লগইন করুন</button>
+      <div class="form-msg" id="loginMsg"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Add entry modal -->
+<div class="overlay" id="addOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>নতুন এন্ট্রি যোগ করুন</h3>
+      <button class="modal-close" id="addClose">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field-row">
+        <div class="field">
+          <label>নাম *</label>
+          <input type="text" id="fName" placeholder="যেমন: Antaranga">
+        </div>
+        <div class="field">
+          <label>বছর *</label>
+          <input type="text" id="fYear" placeholder="যেমন: 2024">
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>দেশ *</label>
+          <input type="text" id="fCountry" placeholder="যেমন: Bangladesh">
+        </div>
+        <div class="field">
+          <label>ভাষা *</label>
+          <input type="text" id="fLanguage" placeholder="যেমন: Bangla">
+        </div>
+      </div>
+      <div class="field">
+        <label>ক্যাটাগরি *</label>
+        <select id="fCategory">
+          <option value="Movie">মুভি</option>
+          <option value="Series">সিরিজ</option>
+          <option value="Natok">নাটক</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Watch লিংক (embed/stream URL) *</label>
+        <input type="text" id="fWatch" placeholder="https://...">
+      </div>
+      <div class="hint">সরাসরি .mp4 লিংক বা iframe-embed-যোগ্য লিংক দিলে সাইটেই প্লে হবে। না হলে দর্শক নতুন ট্যাবে দেখার অপশন পাবে।</div>
+      <div class="field">
+        <label>Download লিংক *</label>
+        <input type="text" id="fDownload" placeholder="https://...">
+      </div>
+      <div class="field">
+        <label>পোস্টার ছবির URL (ঐচ্ছিক)</label>
+        <input type="text" id="fPoster" placeholder="https://...">
+      </div>
+      <div class="field-check">
+        <input type="checkbox" id="fPrivate">
+        <label for="fPrivate">🔒 এই এন্ট্রিটি প্রাইভেট সেকশনে যোগ করো (দেখতে আলাদা পাসওয়ার্ড লাগবে)</label>
+      </div>
+      <button class="btn btn-gold" id="addSubmit" style="width:100%;">সংরক্ষণ করুন</button>
+      <div class="form-msg" id="addMsg"></div>
+      <button class="inline-link-btn" id="openSetPrivateBtn">প্রাইভেট সেকশনের পাসওয়ার্ড সেট / পরিবর্তন করো</button>
+    </div>
+  </div>
+</div>
+
+<!-- Private section login modal -->
+<div class="overlay" id="privateLoginOverlay">
+  <div class="modal" style="max-width:380px;">
+    <div class="modal-head">
+      <h3>🔒 প্রাইভেট সেকশন</h3>
+      <button class="modal-close" id="privateLoginClose">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>প্রাইভেট পাসওয়ার্ড</label>
+        <input type="password" id="privateLoginPassword" placeholder="••••••••">
+      </div>
+      <button class="btn btn-gold" id="privateLoginSubmit" style="width:100%;">আনলক করুন</button>
+      <div class="form-msg" id="privateLoginMsg"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Set/change private-section password modal (admin only, opened from add modal) -->
+<div class="overlay" id="setPrivateOverlay">
+  <div class="modal" style="max-width:380px;">
+    <div class="modal-head">
+      <h3>প্রাইভেট পাসওয়ার্ড সেট করো</h3>
+      <button class="modal-close" id="setPrivateClose">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>নতুন প্রাইভেট পাসওয়ার্ড</label>
+        <input type="password" id="fNewPrivatePw" placeholder="••••••••">
+      </div>
+      <div class="hint">এই পাসওয়ার্ড দিয়ে দর্শকরা (এবং তুমিও) প্রাইভেট সেকশনের ভিডিও দেখতে পারবে। এটা অ্যাডমিন পাসওয়ার্ড থেকে সম্পূর্ণ আলাদা।</div>
+      <button class="btn btn-gold" id="setPrivateSubmit" style="width:100%;">সংরক্ষণ করুন</button>
+      <div class="form-msg" id="setPrivateMsg"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =========================================================================
+   CONFIG — এই লাইনটা নিজের Google Apps Script Web App URL দিয়ে বদলে দাও।
+   README.md ফাইলে ধাপে ধাপে সেটআপ নির্দেশনা দেওয়া আছে।
+   ========================================================================= */
+const API_URL = "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
+
+let ALL_ENTRIES = [];
+let activeCategory = "all";
+let searchTerm = "";
+let isAdmin = sessionStorage.getItem("realArchiveAdmin") === "1";
+
+const el = id => document.getElementById(id);
+
+/* ---------------- Data loading ---------------- */
+function getPrivatePw(){ return sessionStorage.getItem("realArchivePrivatePw") || ""; }
+function isPrivateUnlocked(){ return !!getPrivatePw(); }
+function isPrivateEntry(entry){
+  return entry && (entry.Private === true || entry.Private === "TRUE" || entry.Private === "true");
+}
+
+async function loadEntries(){
+  const grid = el("grid");
+  grid.innerHTML = '<div class="empty-state">লোড হচ্ছে...</div>';
+  try{
+    const privatePass = getPrivatePw();
+    const url = privatePass ? `${API_URL}?privatePass=${encodeURIComponent(privatePass)}` : API_URL;
+    const res = await fetch(url, {method:"GET"});
+    const data = await res.json();
+    ALL_ENTRIES = Array.isArray(data) ? data.filter(r => r.Name) : [];
+  }catch(err){
+    ALL_ENTRIES = [];
+    grid.innerHTML = '';
+    el("emptyState").style.display = "block";
+    el("emptyState").textContent = "ডেটা লোড করা যায়নি। API_URL ঠিকভাবে সেট করা আছে কিনা দেখো।";
+    console.error(err);
+    return;
+  }
+  render();
+}
+
+/* ---------------- Rendering ---------------- */
+function matchesFilters(entry){
+  const isPriv = isPrivateEntry(entry);
+  if(activeCategory === "Private"){
+    if(!isPriv) return false;
+  } else {
+    if(isPriv) return false; // প্রাইভেট এন্ট্রি সাধারণ ক্যাটালগ/ক্যাটাগরি ভিউ-তে দেখাবে না
+    const catOk = activeCategory === "all" || entry.Category === activeCategory;
+    if(!catOk) return false;
+  }
+  if(!searchTerm) return true;
+  const hay = [entry.Name, entry.Year, entry.Country, entry.Language].join(" ").toLowerCase();
+  return hay.includes(searchTerm.toLowerCase());
+}
+
+function groupByYear(entries){
+  const map = new Map();
+  entries.forEach(entry=>{
+    const y = (entry.Year !== undefined && entry.Year !== null && String(entry.Year).trim() !== "")
+      ? String(entry.Year).trim() : "অজানা বছর";
+    if(!map.has(y)) map.set(y, []);
+    map.get(y).push(entry);
+  });
+  const years = Array.from(map.keys()).sort((a,b)=>{
+    const na = parseInt(a,10), nb = parseInt(b,10);
+    const aNum = !isNaN(na), bNum = !isNaN(nb);
+    if(aNum && bNum) return nb - na; // বেশি বছর আগে, কম পরে (2026 → 2023 → 2018)
+    if(aNum) return -1;
+    if(bNum) return 1;
+    return a.localeCompare(b);
+  });
+  return years.map(y => ({ year: y, entries: map.get(y).slice().reverse() }));
+}
+
+function posterStyle(entry){
+  return entry.Poster ? `background-image:url('${escapeAttr(entry.Poster)}');` : "";
+}
+
+function escapeHtml(str){
+  return String(str ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[c]));
+}
+function escapeAttr(str){ return escapeHtml(str).replace(/'/g,"&#39;"); }
+
+function render(){
+  const filtered = ALL_ENTRIES.filter(matchesFilters);
+  el("countTag").textContent = filtered.length + " এন্ট্রি";
+
+  // Hero = latest public (non-private) entry, only shown when no search/filter active
+  const heroWrap = el("heroWrap");
+  const publicEntries = ALL_ENTRIES.filter(e => !isPrivateEntry(e));
+  if(activeCategory === "all" && !searchTerm && publicEntries.length){
+    const latest = publicEntries[publicEntries.length - 1];
+    heroWrap.style.display = "block";
+    el("heroCard").innerHTML = `
+      <div class="hero-poster" style="${posterStyle(latest)}">
+        ${latest.Poster ? "" : `<div class="fallback-num">${escapeHtml(latest.Year||"")}</div>`}
+      </div>
+      <div class="hero-body">
+        <p class="hero-cat">${escapeHtml(catLabel(latest.Category))}</p>
+        <h2>${escapeHtml(latest.Name)}</h2>
+        <div class="hero-meta">
+          <span>${escapeHtml(latest.Year)}</span>
+          <span>${escapeHtml(latest.Country)}</span>
+          <span>${escapeHtml(latest.Language)}</span>
+        </div>
+      </div>`;
+    el("heroCard").onclick = () => openDetail(latest);
+  } else {
+    heroWrap.style.display = "none";
+  }
+
+  const grid = el("grid");
+  const emptyState = el("emptyState");
+  if(!filtered.length){
+    grid.innerHTML = "";
+    emptyState.style.display = "block";
+    emptyState.textContent = activeCategory === "Private"
+      ? "প্রাইভেট সেকশনে এখনো কোনো এন্ট্রি যোগ করা হয়নি।"
+      : "কোনো এন্ট্রি পাওয়া যায়নি। সার্চ বা ফিল্টার পরিবর্তন করে দেখুন।";
+    return;
+  }
+  emptyState.style.display = "none";
+
+  // বছর অনুযায়ী গ্রুপ করে উপর থেকে নিচে (নতুন → পুরনো) সাজানো
+  const groups = groupByYear(filtered);
+  let runningNo = filtered.length;
+  grid.innerHTML = groups.map(group => `
+    <div class="year-group">
+      <div class="year-group-head">
+        <span class="year-group-line"></span>
+        <h4>${escapeHtml(group.year)}</h4>
+        <span class="year-group-line"></span>
+      </div>
+      <div class="grid-inner">
+        ${group.entries.map(entry => {
+          const num = runningNo--;
+          return `
+          <div class="card" data-idx="${ALL_ENTRIES.indexOf(entry)}">
+            <div class="card-poster" style="${posterStyle(entry)}">
+              <span class="entry-no">${String(num).padStart(2,"0")}</span>
+              ${entry.Poster ? "" : `<div class="fallback-title">${escapeHtml(entry.Name)}</div>`}
+              <span class="cat-tag">${escapeHtml(catLabel(entry.Category))}</span>
+            </div>
+            <div class="card-title">${escapeHtml(entry.Name)}</div>
+            <div class="card-sub">${escapeHtml(entry.Year)} · ${escapeHtml(entry.Country)}</div>
+          </div>`;
+        }).join("")}
+      </div>
+    </div>
+  `).join("");
+
+  grid.querySelectorAll(".card").forEach(cardEl=>{
+    cardEl.addEventListener("click", () => {
+      const idx = Number(cardEl.dataset.idx);
+      openDetail(ALL_ENTRIES[idx]);
+    });
+  });
+}
+
+function catLabel(cat){
+  if(cat === "Movie") return "মুভি";
+  if(cat === "Series") return "সিরিজ";
+  if(cat === "Natok") return "নাটক";
+  return cat || "";
+}
+
+/* ---------------- Detail modal ---------------- */
+function openDetail(entry){
+  el("detailTitle").textContent = entry.Name;
+  el("detailMeta").innerHTML = `
+    <span><strong>বছর:</strong> ${escapeHtml(entry.Year)}</span>
+    <span><strong>দেশ:</strong> ${escapeHtml(entry.Country)}</span>
+    <span><strong>ভাষা:</strong> ${escapeHtml(entry.Language)}</span>
+    <span><strong>ক্যাটাগরি:</strong> ${escapeHtml(catLabel(entry.Category))}</span>
+  `;
+
+  const watchWrap = el("watchWrap");
+  const watchUrl = entry.WatchLink || "";
+  watchWrap.innerHTML = "";
+  if(/\.(mp4|webm|ogg)(\?.*)?$/i.test(watchUrl)){
+    watchWrap.innerHTML = `<video controls src="${escapeAttr(watchUrl)}"></video>`;
+  } else if(watchUrl){
+    watchWrap.innerHTML = `<iframe src="${escapeAttr(watchUrl)}" allowfullscreen></iframe>
+      <div class="watch-fallback" style="position:absolute;bottom:8px;">যদি প্লেয়ার না দেখায়, নিচের "নতুন ট্যাবে দেখুন" বাটন ব্যবহার করো — কিছু হোস্টিং সাইট (যেমন Terabox) সরাসরি এমবেড ব্লক করে।</div>`;
+  } else {
+    watchWrap.innerHTML = `<div class="watch-fallback">কোনো Watch লিংক দেওয়া নেই।</div>`;
+  }
+
+  el("watchLinkBtn").href = watchUrl || "#";
+  el("downloadLinkBtn").href = entry.DownloadLink || "#";
+  el("detailOverlay").classList.add("show");
+}
+el("detailClose").onclick = () => el("detailOverlay").classList.remove("show");
+el("detailOverlay").addEventListener("click", e=>{ if(e.target === el("detailOverlay")) el("detailOverlay").classList.remove("show"); });
+
+/* ---------------- Filters ---------------- */
+el("chipRow").addEventListener("click", e=>{
+  const btn = e.target.closest(".chip");
+  if(!btn) return;
+  const cat = btn.dataset.cat;
+  if(cat === "Private" && !isPrivateUnlocked()){
+    el("privateLoginOverlay").classList.add("show");
+    return; // পাসওয়ার্ড সঠিক না হওয়া পর্যন্ত ভিউ বদলাবে না
+  }
+  document.querySelectorAll(".chip").forEach(c=>c.classList.remove("active"));
+  btn.classList.add("active");
+  activeCategory = cat;
+  render();
+});
+el("searchInput").addEventListener("input", e=>{
+  searchTerm = e.target.value.trim();
+  render();
+});
+
+/* ---------------- Admin login ---------------- */
+el("adminBtn").addEventListener("click", ()=>{
+  if(isAdmin){ openAddModal(); }
+  else { el("loginOverlay").classList.add("show"); }
+});
+el("loginClose").onclick = () => el("loginOverlay").classList.remove("show");
+el("loginOverlay").addEventListener("click", e=>{ if(e.target === el("loginOverlay")) el("loginOverlay").classList.remove("show"); });
+
+el("loginSubmit").addEventListener("click", async ()=>{
+  const pass = el("loginPassword").value;
+  const msg = el("loginMsg");
+  if(!pass){ msg.textContent = "পাসওয়ার্ড দাও।"; msg.className = "form-msg err"; return; }
+  msg.textContent = "যাচাই হচ্ছে...";
+  msg.className = "form-msg";
+  try{
+    const res = await fetch(API_URL, {
+      method:"POST",
+      headers:{ "Content-Type":"text/plain;charset=utf-8" },
+      body: JSON.stringify({ action:"verify", password: pass })
+    });
+    const data = await res.json();
+    if(data.success){
+      isAdmin = true;
+      sessionStorage.setItem("realArchiveAdmin","1");
+      sessionStorage.setItem("realArchivePw", pass); // used to sign the add-entry request this session
+      el("loginOverlay").classList.remove("show");
+      el("loginPassword").value = "";
+      msg.textContent = "";
+      openAddModal();
+    } else {
+      msg.textContent = "পাসওয়ার্ড ভুল।";
+      msg.className = "form-msg err";
+    }
+  }catch(err){
+    msg.textContent = "সংযোগ করা যায়নি। API_URL চেক করো।";
+    msg.className = "form-msg err";
+    console.error(err);
+  }
+});
+
+/* ---------------- Add entry ---------------- */
+function openAddModal(){
+  el("addOverlay").classList.add("show");
+}
+el("addClose").onclick = () => el("addOverlay").classList.remove("show");
+el("addOverlay").addEventListener("click", e=>{ if(e.target === el("addOverlay")) el("addOverlay").classList.remove("show"); });
+
+el("addSubmit").addEventListener("click", async ()=>{
+  const msg = el("addMsg");
+  const payload = {
+    action:"add",
+    password: sessionStorage.getItem("realArchivePw") || "",
+    name: el("fName").value.trim(),
+    year: el("fYear").value.trim(),
+    country: el("fCountry").value.trim(),
+    language: el("fLanguage").value.trim(),
+    category: el("fCategory").value,
+    watchLink: el("fWatch").value.trim(),
+    downloadLink: el("fDownload").value.trim(),
+    poster: el("fPoster").value.trim(),
+    isPrivate: el("fPrivate").checked
+  };
+  if(!payload.name || !payload.year || !payload.country || !payload.language || !payload.watchLink || !payload.downloadLink){
+    msg.textContent = "* চিহ্নিত সব ঘর পূরণ করো।";
+    msg.className = "form-msg err";
+    return;
+  }
+  msg.textContent = "সংরক্ষণ হচ্ছে...";
+  msg.className = "form-msg";
+  try{
+    const res = await fetch(API_URL, {
+      method:"POST",
+      headers:{ "Content-Type":"text/plain;charset=utf-8" },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if(data.success){
+      msg.textContent = "সংরক্ষিত হয়েছে!";
+      msg.className = "form-msg ok";
+      ["fName","fYear","fCountry","fLanguage","fWatch","fDownload","fPoster"].forEach(id => el(id).value = "");
+      el("fPrivate").checked = false;
+      await loadEntries();
+      setTimeout(()=> el("addOverlay").classList.remove("show"), 700);
+    } else {
+      msg.textContent = data.error || "সংরক্ষণ করা যায়নি।";
+      msg.className = "form-msg err";
+    }
+  }catch(err){
+    msg.textContent = "সংযোগ করা যায়নি। API_URL চেক করো।";
+    msg.className = "form-msg err";
+    console.error(err);
+  }
+});
+
+/* ---------------- Private section: viewing login ---------------- */
+el("privateLoginClose").onclick = () => el("privateLoginOverlay").classList.remove("show");
+el("privateLoginOverlay").addEventListener("click", e=>{ if(e.target === el("privateLoginOverlay")) el("privateLoginOverlay").classList.remove("show"); });
+
+el("privateLoginSubmit").addEventListener("click", async ()=>{
+  const pass = el("privateLoginPassword").value;
+  const msg = el("privateLoginMsg");
+  if(!pass){ msg.textContent = "পাসওয়ার্ড দাও।"; msg.className = "form-msg err"; return; }
+  msg.textContent = "যাচাই হচ্ছে...";
+  msg.className = "form-msg";
+  try{
+    const res = await fetch(API_URL, {
+      method:"POST",
+      headers:{ "Content-Type":"text/plain;charset=utf-8" },
+      body: JSON.stringify({ action:"verifyPrivate", password: pass })
+    });
+    const data = await res.json();
+    if(data.success){
+      sessionStorage.setItem("realArchivePrivatePw", pass);
+      el("privateLoginOverlay").classList.remove("show");
+      el("privateLoginPassword").value = "";
+      msg.textContent = "";
+      await loadEntries(); // এখন থেকে প্রাইভেট এন্ট্রিসহ ডেটা লোড হবে
+      document.querySelectorAll(".chip").forEach(c=>c.classList.remove("active"));
+      el("privateChip").classList.add("active");
+      activeCategory = "Private";
+      render();
+    } else {
+      msg.textContent = "পাসওয়ার্ড ভুল।";
+      msg.className = "form-msg err";
+    }
+  }catch(err){
+    msg.textContent = "সংযোগ করা যায়নি। API_URL চেক করো।";
+    msg.className = "form-msg err";
+    console.error(err);
+  }
+});
+
+/* ---------------- Private section: password set/change (admin only) ---------------- */
+el("openSetPrivateBtn").addEventListener("click", ()=>{
+  el("addOverlay").classList.remove("show");
+  el("setPrivateOverlay").classList.add("show");
+});
+el("setPrivateClose").onclick = () => el("setPrivateOverlay").classList.remove("show");
+el("setPrivateOverlay").addEventListener("click", e=>{ if(e.target === el("setPrivateOverlay")) el("setPrivateOverlay").classList.remove("show"); });
+
+el("setPrivateSubmit").addEventListener("click", async ()=>{
+  const newPw = el("fNewPrivatePw").value;
+  const msg = el("setPrivateMsg");
+  if(!newPw){ msg.textContent = "নতুন পাসওয়ার্ড দাও।"; msg.className = "form-msg err"; return; }
+  msg.textContent = "সংরক্ষণ হচ্ছে...";
+  msg.className = "form-msg";
+  try{
+    const res = await fetch(API_URL, {
+      method:"POST",
+      headers:{ "Content-Type":"text/plain;charset=utf-8" },
+      body: JSON.stringify({
+        action:"setPrivatePassword",
+        adminPassword: sessionStorage.getItem("realArchivePw") || "",
+        newPassword: newPw
+      })
+    });
+    const data = await res.json();
+    if(data.success){
+      msg.textContent = "প্রাইভেট পাসওয়ার্ড সেট হয়েছে!";
+      msg.className = "form-msg ok";
+      el("fNewPrivatePw").value = "";
+    } else {
+      msg.textContent = data.error || "সংরক্ষণ করা যায়নি।";
+      msg.className = "form-msg err";
+    }
+  }catch(err){
+    msg.textContent = "সংযোগ করা যায়নি। API_URL চেক করো।";
+    msg.className = "form-msg err";
+    console.error(err);
+  }
+});
+
+/* ---------------- Init ---------------- */
+loadEntries();
+</script>
+</body>
+</html>
