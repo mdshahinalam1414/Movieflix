@@ -739,6 +739,20 @@ function render(){
 }
 
 /* ---------------- Detail modal ---------------- */
+// এই হোস্টগুলো iframe embed ব্লক করে রাখে (X-Frame-Options: sameorigin),
+// তাই এদের জন্য iframe চেষ্টা না করে সরাসরি একটা স্পষ্ট বাটন দেখানো হয়।
+const NO_EMBED_HOSTS = [
+  "terabox.com","1024tera.com","teraboxapp.com","terabox.app",
+  "teraboxlink.com","4funbox.com","mirrobox.com","nephobox.com",
+  "freeterabox.com","1024terabox.com"
+];
+function isBlockedEmbedHost(url){
+  try{
+    const host = new URL(url).hostname.replace(/^www\./,"").toLowerCase();
+    return NO_EMBED_HOSTS.some(h => host === h || host.endsWith("." + h));
+  }catch(e){ return false; }
+}
+
 function openDetail(entry){
   el("detailTitle").innerHTML = escapeHtml(entry.Name) + (entry.Section === "Private" ? '<span class="lock-tag">🔒 প্রাইভেট</span>' : "");
   el("detailMeta").innerHTML = `
@@ -750,13 +764,19 @@ function openDetail(entry){
   const watchWrap = el("watchWrap");
   const watchUrl = entry.WatchLink || "";
   watchWrap.innerHTML = "";
-  if(/\.(mp4|webm|ogg)(\?.*)?$/i.test(watchUrl)){
+  if(!watchUrl){
+    watchWrap.innerHTML = `<div class="watch-fallback">কোনো Watch লিংক দেওয়া নেই।</div>`;
+  } else if(/\.(mp4|webm|ogg)(\?.*)?$/i.test(watchUrl)){
     watchWrap.innerHTML = `<video controls src="${escapeAttr(watchUrl)}"></video>`;
-  } else if(watchUrl){
+  } else if(isBlockedEmbedHost(watchUrl)){
+    watchWrap.innerHTML = `
+      <div class="watch-fallback">
+        এই হোস্টিং সাইট এখানে সরাসরি প্লে হতে দেয় না।<br>
+        নিচের বাটনে ক্লিক করে ওদের সাইটে গিয়ে দেখো।
+      </div>`;
+  } else {
     watchWrap.innerHTML = `<iframe src="${escapeAttr(watchUrl)}" allowfullscreen></iframe>
       <div class="watch-fallback" style="position:absolute;bottom:8px;">যদি প্লেয়ার না দেখায়, নিচের "নতুন ট্যাবে দেখুন" বাটন ব্যবহার করো — কিছু হোস্টিং সাইট সরাসরি এমবেড ব্লক করে।</div>`;
-  } else {
-    watchWrap.innerHTML = `<div class="watch-fallback">কোনো Watch লিংক দেওয়া নেই।</div>`;
   }
   el("watchLinkBtn").href = watchUrl || "#";
   el("downloadLinkBtn").href = entry.DownloadLink || "#";
