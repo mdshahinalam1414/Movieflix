@@ -338,6 +338,29 @@
   .form-msg.ok{color:#8fbf7a;}
   .hint{font-size:12px;color:var(--muted);margin-top:-6px;margin-bottom:14px;}
 
+  .tag-field-wrap{position:relative;}
+  .tag-suggest{
+    position:absolute;
+    top:100%;left:0;right:0;
+    background:var(--panel-2);
+    border:1px solid var(--gold-dim);
+    border-top:none;
+    max-height:180px;
+    overflow-y:auto;
+    z-index:20;
+    display:none;
+  }
+  .tag-suggest.show{display:block;}
+  .tag-suggest .sugg-item{
+    padding:8px 11px;
+    font-size:13px;
+    cursor:pointer;
+    color:var(--text);
+  }
+  .tag-suggest .sugg-item:hover{background:rgba(200,155,60,0.15);color:var(--gold);}
+
+  .card-tags{font-size:11px;color:var(--gold-dim);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
   .settings-block{
     margin-top:26px;
     padding-top:20px;
@@ -521,6 +544,17 @@
           <option value="Natok">নাটক</option>
         </select>
       </div>
+      <div class="field tag-field-wrap">
+        <label>জেনার / ট্যাগ (একাধিক হলে কমা দিয়ে আলাদা করো)</label>
+        <input type="text" id="fTags" placeholder="যেমন: Action, Romance, Thriller" autocomplete="off">
+        <div class="tag-suggest" id="tagsSuggest"></div>
+      </div>
+      <div class="field tag-field-wrap">
+        <label>অভিনয়শিল্পী (একাধিক হলে কমা দিয়ে আলাদা করো)</label>
+        <input type="text" id="fCast" placeholder="যেমন: Shakib Khan, Bubly" autocomplete="off">
+        <div class="tag-suggest" id="castSuggest"></div>
+      </div>
+      <div class="hint">এই দুই ঘরে আগে যা যা লেখা হয়েছে, টাইপ করলে নিচে সেগুলোর হিন্ট (সাজেশন) দেখাবে — ক্লিক করলেই বসে যাবে।</div>
       <div class="field">
         <label>Watch লিংক (embed/stream URL) *</label>
         <input type="text" id="fWatch" placeholder="https://...">
@@ -555,7 +589,7 @@
    CONFIG — এই লাইনটা নিজের Google Apps Script Web App URL দিয়ে বদলে দাও।
    README.md ফাইলে ধাপে ধাপে সেটআপ নির্দেশনা দেওয়া আছে।
    ========================================================================= */
-const API_URL = "https://script.google.com/macros/s/AKfycbzPT0_CLjbFMOAglXZIfMCrZH3g1QuUmSdEmNVslQikHRUaEO57dy-F2Uu0HQx_gz6kMw/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbxeuVPUMHdH7bzfGpI2pjJN_UytxxsEPTjlUrfOyubkZUkL_ZdMoY_wk63CAFnxPqPc4w/exec";
 
 let PUBLIC_ENTRIES = [];
 let PRIVATE_ENTRIES = [];
@@ -623,7 +657,7 @@ function matchesFilters(entry){
   const catOk = activeCategory === "all" || entry.Category === activeCategory;
   if(!catOk) return false;
   if(!searchTerm) return true;
-  const hay = [entry.Name, entry.Year, entry.Country, entry.Language].join(" ").toLowerCase();
+  const hay = [entry.Name, entry.Year, entry.Country, entry.Language, entry.Tags, entry.Cast].join(" ").toLowerCase();
   return hay.includes(searchTerm.toLowerCase());
 }
 
@@ -722,6 +756,7 @@ function render(){
             </div>
             <div class="card-title">${escapeHtml(entry.Name)}</div>
             <div class="card-sub">${escapeHtml(entry.Country)} · ${escapeHtml(entry.Language)}</div>
+            ${entry.Tags ? `<div class="card-tags">${escapeHtml(entry.Tags)}</div>` : ""}
           </div>
         `).join("")}
       </div>
@@ -760,6 +795,8 @@ function openDetail(entry){
     <span><strong>দেশ:</strong> ${escapeHtml(entry.Country)}</span>
     <span><strong>ভাষা:</strong> ${escapeHtml(entry.Language)}</span>
     <span><strong>ক্যাটাগরি:</strong> ${escapeHtml(catLabel(entry.Category))}</span>
+    ${entry.Tags ? `<span><strong>জেনার:</strong> ${escapeHtml(entry.Tags)}</span>` : ""}
+    ${entry.Cast ? `<span><strong>অভিনয়ে:</strong> ${escapeHtml(entry.Cast)}</span>` : ""}
   `;
   const watchWrap = el("watchWrap");
   const watchUrl = entry.WatchLink || "";
@@ -887,8 +924,11 @@ el("loginSubmit").addEventListener("click", async ()=>{
 });
 
 /* ---------------- Add entry (admin) ---------------- */
-function openAddModal(){
+async function openAddModal(){
   el("fSection").value = currentSection === "private" ? "Private" : "Public";
+  if(isAdmin && !PRIVATE_ENTRIES.length){
+    await loadPrivateEntries(adminPw);
+  }
   el("addOverlay").classList.add("show");
 }
 el("addClose").onclick = () => el("addOverlay").classList.remove("show");
@@ -905,6 +945,8 @@ el("addSubmit").addEventListener("click", async ()=>{
     country: el("fCountry").value.trim(),
     language: el("fLanguage").value.trim(),
     category: el("fCategory").value,
+    tags: el("fTags").value.trim(),
+    cast: el("fCast").value.trim(),
     watchLink: el("fWatch").value.trim(),
     downloadLink: el("fDownload").value.trim(),
     poster: el("fPoster").value.trim()
@@ -925,7 +967,7 @@ el("addSubmit").addEventListener("click", async ()=>{
     if(data.success){
       msg.textContent = "সংরক্ষিত হয়েছে!";
       msg.className = "form-msg ok";
-      ["fName","fYear","fCountry","fLanguage","fWatch","fDownload","fPoster"].forEach(id => el(id).value = "");
+      ["fName","fYear","fCountry","fLanguage","fTags","fCast","fWatch","fDownload","fPoster"].forEach(id => el(id).value = "");
       await loadPublicEntries();
       if(payload.section === "Private"){ await loadPrivateEntries(adminPw); }
       render();
@@ -968,6 +1010,74 @@ el("setPrivatePassBtn").addEventListener("click", async ()=>{
     console.error(err);
   }
 });
+
+/* ---------------- Tag / Cast autocomplete (suggests previously-used values) ---------------- */
+function buildSuggestionPool(field){
+  const set = new Set();
+  [...PUBLIC_ENTRIES, ...PRIVATE_ENTRIES].forEach(e=>{
+    const raw = (e[field] || "").toString();
+    raw.split(",").forEach(t=>{
+      t = t.trim();
+      if(t) set.add(t);
+    });
+  });
+  return Array.from(set).sort((a,b)=>a.localeCompare(b));
+}
+
+function currentFragment(inputEl){
+  const parts = inputEl.value.split(",");
+  return parts[parts.length - 1].trim();
+}
+
+function chooseSuggestion(inputEl, choice){
+  const parts = inputEl.value.split(",");
+  parts[parts.length - 1] = " " + choice;
+  inputEl.value = parts.map(p => p.trim()).filter(Boolean).join(", ") + ", ";
+  inputEl.focus();
+}
+
+function setupTagAutocomplete(inputId, dropdownId, sheetField){
+  const inputEl = el(inputId);
+  const dropdownEl = el(dropdownId);
+
+  function renderSuggestions(){
+    const fragment = currentFragment(inputEl);
+    if(!fragment){
+      dropdownEl.classList.remove("show");
+      dropdownEl.innerHTML = "";
+      return;
+    }
+    const pool = buildSuggestionPool(sheetField);
+    const already = inputEl.value.split(",").map(s=>s.trim().toLowerCase());
+    const matches = pool
+      .filter(p => p.toLowerCase().includes(fragment.toLowerCase()) && !already.includes(p.toLowerCase()))
+      .slice(0, 8);
+    if(!matches.length){
+      dropdownEl.classList.remove("show");
+      dropdownEl.innerHTML = "";
+      return;
+    }
+    dropdownEl.innerHTML = matches.map(m => `<div class="sugg-item">${escapeHtml(m)}</div>`).join("");
+    dropdownEl.classList.add("show");
+    dropdownEl.querySelectorAll(".sugg-item").forEach((itemEl, idx) => {
+      itemEl.addEventListener("mousedown", (e) => {
+        e.preventDefault(); // input থেকে ফোকাস চলে যাওয়া আটকায়
+        chooseSuggestion(inputEl, matches[idx]);
+        dropdownEl.classList.remove("show");
+        dropdownEl.innerHTML = "";
+      });
+    });
+  }
+
+  inputEl.addEventListener("input", renderSuggestions);
+  inputEl.addEventListener("focus", renderSuggestions);
+  inputEl.addEventListener("blur", () => {
+    setTimeout(() => { dropdownEl.classList.remove("show"); dropdownEl.innerHTML = ""; }, 120);
+  });
+}
+
+setupTagAutocomplete("fTags", "tagsSuggest", "Tags");
+setupTagAutocomplete("fCast", "castSuggest", "Cast");
 
 /* ---------------- Init ---------------- */
 loadPublicEntries();
