@@ -30,7 +30,7 @@
     line-height:1.5;
     -webkit-font-smoothing:antialiased;
   }
-  h1,h2,h3,.display{
+  h1,h2,h3,h4,.display{
     font-family:'Fraunces',serif;
     font-weight:600;
     letter-spacing:-0.01em;
@@ -110,6 +110,28 @@
   .btn-red:hover{background:#bf5137;}
   .btn-ghost{border-color:transparent;color:var(--muted);}
   .btn-ghost:hover{color:var(--gold);border-color:var(--line);}
+  .btn-sm{padding:6px 12px;font-size:12.5px;}
+
+  /* ---------- Section tabs (Public / Private) ---------- */
+  .section-tabs{
+    max-width:1180px;
+    margin:0 auto;
+    padding:16px 32px 0;
+    display:flex;
+    gap:10px;
+  }
+  .tab-btn{
+    background:transparent;
+    border:1px solid var(--line);
+    color:var(--muted);
+    padding:9px 20px;
+    font-family:'Work Sans',sans-serif;
+    font-size:13.5px;
+    font-weight:600;
+    cursor:pointer;
+    border-radius:20px;
+  }
+  .tab-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(200,155,60,0.08);}
 
   /* ---------- Category chips ---------- */
   .chip-row{
@@ -131,13 +153,11 @@
     font-family:'Work Sans',sans-serif;
   }
   .chip.active{border-color:var(--gold);color:var(--gold);}
-  .chip.private-chip{border-color:var(--red-dim);}
-  .chip.private-chip.active{border-color:var(--red);color:#e2a794;}
 
   /* ---------- Hero ---------- */
   .hero{
     max-width:1180px;
-    margin:40px auto 8px;
+    margin:32px auto 8px;
     padding:0 32px;
   }
   .hero-label{
@@ -173,49 +193,37 @@
   .hero-body h2{font-size:32px;}
   .hero-meta{color:var(--muted);font-size:13.5px;}
   .hero-meta span{margin-right:14px;}
-  .hero-body p.hero-cat{
-    color:var(--gold);
-    font-size:12.5px;
-    text-transform:none;
-    margin:0;
-  }
+  .hero-body p.hero-cat{color:var(--gold);font-size:12.5px;margin:0;}
 
-  /* ---------- Catalog grid ---------- */
-  main{max-width:1180px;margin:0 auto;padding:34px 32px 80px;}
+  /* ---------- Catalog area ---------- */
+  main{max-width:1180px;margin:0 auto;padding:30px 32px 80px;}
   .section-head{
     display:flex;
     align-items:baseline;
     justify-content:space-between;
     border-bottom:1px solid var(--line);
     padding-bottom:10px;
-    margin-bottom:20px;
+    margin-bottom:6px;
   }
-  .section-head h3{font-size:19px;}
+  .section-head h3{font-size:19px;display:flex;align-items:center;gap:8px;}
   .count-tag{font-size:12.5px;color:var(--muted);}
 
-  .grid{display:block;}
-  .grid-inner{
+  .year-block{margin-top:30px;}
+  .year-head{
+    display:flex;
+    align-items:baseline;
+    gap:12px;
+    margin-bottom:16px;
+  }
+  .year-head .display{font-size:26px;color:var(--gold);}
+  .year-head .year-line{flex:1;height:1px;background:var(--line);}
+  .year-head .year-count{font-size:12px;color:var(--muted);}
+
+  .grid{
     display:grid;
     grid-template-columns:repeat(auto-fill,minmax(168px,1fr));
     gap:22px 18px;
   }
-  .year-group{margin-bottom:36px;}
-  .year-group:last-child{margin-bottom:0;}
-  .year-group-head{
-    display:flex;
-    align-items:center;
-    gap:14px;
-    margin-bottom:16px;
-  }
-  .year-group-head h4{
-    font-family:'Fraunces',serif;
-    font-weight:600;
-    font-size:21px;
-    color:var(--gold);
-    white-space:nowrap;
-    margin:0;
-  }
-  .year-group-line{flex:1;height:1px;background:var(--line);}
   .card{
     cursor:pointer;
     display:flex;
@@ -234,28 +242,20 @@
     background-position:center;
   }
   .card-poster .entry-no{
-    position:absolute;
-    top:8px;
-    left:8px;
-    font-size:11px;
-    color:var(--muted);
+    position:absolute;top:8px;left:8px;
+    font-size:11px;color:var(--muted);
     border:1px solid var(--line);
     padding:1px 6px;
     background:rgba(16,14,12,0.7);
   }
   .card-poster .fallback-title{
     font-family:'Fraunces',serif;
-    font-size:15px;
-    color:var(--muted);
-    text-align:center;
-    padding:14px;
+    font-size:15px;color:var(--muted);
+    text-align:center;padding:14px;
   }
   .card-poster .cat-tag{
-    position:absolute;
-    bottom:8px;
-    right:8px;
-    font-size:10.5px;
-    color:var(--gold);
+    position:absolute;bottom:8px;right:8px;
+    font-size:10.5px;color:var(--gold);
     background:rgba(16,14,12,0.75);
     border:1px solid var(--gold-dim);
     padding:1px 6px;
@@ -270,7 +270,19 @@
     padding:50px 0;
     text-align:center;
     border:1px dashed var(--line);
+    margin-top:20px;
   }
+
+  /* ---------- Private lock screen ---------- */
+  .lock-screen{
+    margin-top:40px;
+    border:1px dashed var(--line);
+    padding:60px 30px;
+    text-align:center;
+  }
+  .lock-screen .lock-icon{font-size:30px;margin-bottom:14px;}
+  .lock-screen h3{font-size:20px;margin-bottom:8px;}
+  .lock-screen p{color:var(--muted);font-size:13.5px;margin-bottom:20px;}
 
   /* ---------- Modal shared ---------- */
   .overlay{
@@ -293,11 +305,8 @@
   }
   @keyframes rise{from{transform:translateY(8px);opacity:0;}to{transform:translateY(0);opacity:1;}}
   .modal-head{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:18px 22px;
-    border-bottom:1px solid var(--line);
+    display:flex;justify-content:space-between;align-items:center;
+    padding:18px 22px;border-bottom:1px solid var(--line);
   }
   .modal-head h3{font-size:18px;}
   .modal-close{cursor:pointer;color:var(--muted);font-size:20px;background:none;border:none;}
@@ -308,59 +317,48 @@
   .detail-meta-row{display:flex;flex-wrap:wrap;gap:16px;color:var(--muted);font-size:13px;margin-bottom:16px;}
   .detail-meta-row strong{color:var(--text);font-weight:600;}
   .watch-frame-wrap{
-    border:1px solid var(--line);
-    background:#000;
-    aspect-ratio:16/9;
-    margin-bottom:16px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    position:relative;
+    border:1px solid var(--line);background:#000;aspect-ratio:16/9;
+    margin-bottom:16px;display:flex;align-items:center;justify-content:center;position:relative;
   }
   .watch-frame-wrap iframe,.watch-frame-wrap video{width:100%;height:100%;border:0;}
-  .watch-fallback{
-    color:var(--muted);
-    font-size:13px;
-    text-align:center;
-    padding:20px;
-  }
+  .watch-fallback{color:var(--muted);font-size:13px;text-align:center;padding:20px;}
   .action-row{display:flex;gap:10px;flex-wrap:wrap;}
 
   /* Admin / form modal */
   .field{margin-bottom:14px;}
   .field label{display:block;font-size:12.5px;color:var(--muted);margin-bottom:5px;}
   .field input,.field select{
-    width:100%;
-    background:var(--ink);
-    border:1px solid var(--line);
-    color:var(--text);
-    padding:9px 11px;
-    font-family:'Work Sans',sans-serif;
-    font-size:14px;
-    border-radius:var(--radius);
+    width:100%;background:var(--ink);border:1px solid var(--line);color:var(--text);
+    padding:9px 11px;font-family:'Work Sans',sans-serif;font-size:14px;border-radius:var(--radius);
   }
   .field input:focus,.field select:focus{outline:1px solid var(--gold);border-color:var(--gold);}
   .field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-  .field-check{display:flex;align-items:center;gap:9px;margin-bottom:14px;}
-  .field-check input{width:auto;}
-  .field-check label{font-size:13px;color:var(--text);margin:0;}
-  .inline-link-btn{
-    background:none;border:none;color:var(--gold-dim);
-    font-family:'Work Sans',sans-serif;font-size:12.5px;
-    text-decoration:underline;cursor:pointer;padding:0;margin-top:4px;
-  }
-  .inline-link-btn:hover{color:var(--gold);}
   .form-msg{font-size:13px;margin-top:10px;min-height:18px;}
   .form-msg.err{color:#d17a63;}
   .form-msg.ok{color:#8fbf7a;}
   .hint{font-size:12px;color:var(--muted);margin-top:-6px;margin-bottom:14px;}
 
+  .settings-block{
+    margin-top:26px;
+    padding-top:20px;
+    border-top:1px dashed var(--line);
+  }
+  .settings-block h4{font-size:14px;color:var(--gold);margin-bottom:12px;}
+
+  .lock-tag{
+    display:inline-block;
+    font-size:10px;
+    color:var(--gold);
+    border:1px solid var(--gold-dim);
+    padding:1px 6px;
+    margin-left:6px;
+    border-radius:10px;
+    vertical-align:middle;
+  }
+
   footer{
     border-top:1px solid var(--line);
-    padding:26px 32px;
-    text-align:center;
-    color:var(--muted);
-    font-size:12.5px;
+    padding:26px 32px;text-align:center;color:var(--muted);font-size:12.5px;
   }
 
   @media (max-width:640px){
@@ -377,8 +375,8 @@
 <header class="masthead">
   <div class="masthead-row">
     <div class="brand">
-      <h1 class="display">মুভি আর্কাইভ</h1>
-      <span class="tag">Movie · Series · Natok Catalog</span>
+      <h1 class="display">রিল আর্কাইভ</h1>
+      <span class="tag" id="brandTag">Movie · Series · Natok Catalog</span>
     </div>
     <div class="masthead-tools">
       <div class="search-box">
@@ -387,12 +385,17 @@
       <button class="btn" id="adminBtn">অ্যাডমিন</button>
     </div>
   </div>
+
+  <div class="section-tabs" id="sectionTabs">
+    <button class="tab-btn active" data-section="public">ক্যাটালগ</button>
+    <button class="tab-btn" data-section="private">🔒 প্রাইভেট</button>
+  </div>
+
   <div class="chip-row" id="chipRow">
     <button class="chip active" data-cat="all">সব</button>
     <button class="chip" data-cat="Movie">মুভি</button>
     <button class="chip" data-cat="Series">সিরিজ</button>
     <button class="chip" data-cat="Natok">নাটক</button>
-    <button class="chip private-chip" data-cat="Private" id="privateChip">🔒 প্রাইভেট</button>
   </div>
 </header>
 
@@ -403,13 +406,20 @@
 
 <main>
   <div class="section-head">
-    <h3>ক্যাটালগ</h3>
+    <h3 id="sectionTitle">ক্যাটালগ</h3>
     <span class="count-tag" id="countTag">0 এন্ট্রি</span>
   </div>
-  <div class="grid" id="grid"></div>
-  <div class="empty-state" id="emptyState" style="display:none;">
-    কোনো এন্ট্রি পাওয়া যায়নি। সার্চ বা ফিল্টার পরিবর্তন করে দেখুন।
+
+  <div id="catalogOutput"></div>
+
+  <div class="lock-screen" id="lockScreen" style="display:none;">
+    <div class="lock-icon">🔒</div>
+    <h3>প্রাইভেট সেকশন</h3>
+    <p>এই সেকশনের ভিডিও দেখতে আলাদা পাসওয়ার্ড দরকার।</p>
+    <button class="btn btn-gold" id="unlockBtn">পাসওয়ার্ড দিয়ে আনলক করো</button>
   </div>
+
+  <div class="empty-state" id="emptyState" style="display:none;"></div>
 </main>
 
 <footer>রিল আর্কাইভ — শুধুমাত্র নিজের তৈরি বা বৈধভাবে শেয়ারযোগ্য কনটেন্টের জন্য।</footer>
@@ -441,7 +451,7 @@
     </div>
     <div class="modal-body">
       <div class="field">
-        <label>পাসওয়ার্ড</label>
+        <label>অ্যাডমিন পাসওয়ার্ড</label>
         <input type="password" id="loginPassword" placeholder="••••••••">
       </div>
       <button class="btn btn-gold" id="loginSubmit" style="width:100%;">লগইন করুন</button>
@@ -450,7 +460,25 @@
   </div>
 </div>
 
-<!-- Add entry modal -->
+<!-- Private section unlock modal (for regular viewers) -->
+<div class="overlay" id="privateLoginOverlay">
+  <div class="modal" style="max-width:380px;">
+    <div class="modal-head">
+      <h3>🔒 প্রাইভেট পাসওয়ার্ড</h3>
+      <button class="modal-close" id="privateLoginClose">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>পাসওয়ার্ড</label>
+        <input type="password" id="privatePassword" placeholder="••••••••">
+      </div>
+      <button class="btn btn-gold" id="privateLoginSubmit" style="width:100%;">দেখুন</button>
+      <div class="form-msg" id="privateLoginMsg"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Add entry modal (admin) -->
 <div class="overlay" id="addOverlay">
   <div class="modal">
     <div class="modal-head">
@@ -458,6 +486,13 @@
       <button class="modal-close" id="addClose">✕</button>
     </div>
     <div class="modal-body">
+      <div class="field">
+        <label>এই এন্ট্রি কোথায় দেখানো হবে? *</label>
+        <select id="fSection">
+          <option value="Public">সাধারণ ক্যাটালগ (সবাই দেখবে)</option>
+          <option value="Private">🔒 প্রাইভেট (পাসওয়ার্ড দিয়ে)</option>
+        </select>
+      </div>
       <div class="field-row">
         <div class="field">
           <label>নাম *</label>
@@ -499,50 +534,18 @@
         <label>পোস্টার ছবির URL (ঐচ্ছিক)</label>
         <input type="text" id="fPoster" placeholder="https://...">
       </div>
-      <div class="field-check">
-        <input type="checkbox" id="fPrivate">
-        <label for="fPrivate">🔒 এই এন্ট্রিটি প্রাইভেট সেকশনে যোগ করো (দেখতে আলাদা পাসওয়ার্ড লাগবে)</label>
-      </div>
       <button class="btn btn-gold" id="addSubmit" style="width:100%;">সংরক্ষণ করুন</button>
       <div class="form-msg" id="addMsg"></div>
-      <button class="inline-link-btn" id="openSetPrivateBtn">প্রাইভেট সেকশনের পাসওয়ার্ড সেট / পরিবর্তন করো</button>
-    </div>
-  </div>
-</div>
 
-<!-- Private section login modal -->
-<div class="overlay" id="privateLoginOverlay">
-  <div class="modal" style="max-width:380px;">
-    <div class="modal-head">
-      <h3>🔒 প্রাইভেট সেকশন</h3>
-      <button class="modal-close" id="privateLoginClose">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="field">
-        <label>প্রাইভেট পাসওয়ার্ড</label>
-        <input type="password" id="privateLoginPassword" placeholder="••••••••">
+      <div class="settings-block">
+        <h4>🔒 প্রাইভেট সেকশনের পাসওয়ার্ড সেট/পরিবর্তন করো</h4>
+        <div class="field">
+          <label>নতুন প্রাইভেট পাসওয়ার্ড</label>
+          <input type="password" id="fPrivatePassNew" placeholder="নতুন পাসওয়ার্ড লিখো">
+        </div>
+        <button class="btn btn-sm" id="setPrivatePassBtn">প্রাইভেট পাসওয়ার্ড সেভ করো</button>
+        <div class="form-msg" id="privatePassMsg"></div>
       </div>
-      <button class="btn btn-gold" id="privateLoginSubmit" style="width:100%;">আনলক করুন</button>
-      <div class="form-msg" id="privateLoginMsg"></div>
-    </div>
-  </div>
-</div>
-
-<!-- Set/change private-section password modal (admin only, opened from add modal) -->
-<div class="overlay" id="setPrivateOverlay">
-  <div class="modal" style="max-width:380px;">
-    <div class="modal-head">
-      <h3>প্রাইভেট পাসওয়ার্ড সেট করো</h3>
-      <button class="modal-close" id="setPrivateClose">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="field">
-        <label>নতুন প্রাইভেট পাসওয়ার্ড</label>
-        <input type="password" id="fNewPrivatePw" placeholder="••••••••">
-      </div>
-      <div class="hint">এই পাসওয়ার্ড দিয়ে দর্শকরা (এবং তুমিও) প্রাইভেট সেকশনের ভিডিও দেখতে পারবে। এটা অ্যাডমিন পাসওয়ার্ড থেকে সম্পূর্ণ আলাদা।</div>
-      <button class="btn btn-gold" id="setPrivateSubmit" style="width:100%;">সংরক্ষণ করুন</button>
-      <div class="form-msg" id="setPrivateMsg"></div>
     </div>
   </div>
 </div>
@@ -552,96 +555,126 @@
    CONFIG — এই লাইনটা নিজের Google Apps Script Web App URL দিয়ে বদলে দাও।
    README.md ফাইলে ধাপে ধাপে সেটআপ নির্দেশনা দেওয়া আছে।
    ========================================================================= */
-const API_URL = "https://script.google.com/macros/s/AKfycby1bLIgVSR0J5Ejb-zOQN_VqNu3H-AN5hDT5jqoPchHKiRvGkQsrVy89AYHXzo1iqTm/exec";
+const API_URL = "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
 
-let ALL_ENTRIES = [];
+let PUBLIC_ENTRIES = [];
+let PRIVATE_ENTRIES = [];
+let currentSection = "public";       // "public" | "private"
 let activeCategory = "all";
 let searchTerm = "";
-let isAdmin = sessionStorage.getItem("realArchiveAdmin") === "1";
+let isAdmin = sessionStorage.getItem("raAdmin") === "1";
+let adminPw = sessionStorage.getItem("raAdminPw") || "";
+let privateUnlocked = sessionStorage.getItem("raPrivateUnlocked") === "1";
+let privatePw = sessionStorage.getItem("raPrivatePw") || "";
 
 const el = id => document.getElementById(id);
 
-/* ---------------- Data loading ---------------- */
-function getPrivatePw(){ return sessionStorage.getItem("realArchivePrivatePw") || ""; }
-function isPrivateUnlocked(){ return !!getPrivatePw(); }
-function isPrivateEntry(entry){
-  return entry && (entry.Private === true || entry.Private === "TRUE" || entry.Private === "true");
-}
-
-async function loadEntries(){
-  const grid = el("grid");
-  grid.innerHTML = '<div class="empty-state">লোড হচ্ছে...</div>';
-  try{
-    const privatePass = getPrivatePw();
-    const url = privatePass ? `${API_URL}?privatePass=${encodeURIComponent(privatePass)}` : API_URL;
-    const res = await fetch(url, {method:"GET"});
-    const data = await res.json();
-    ALL_ENTRIES = Array.isArray(data) ? data.filter(r => r.Name) : [];
-  }catch(err){
-    ALL_ENTRIES = [];
-    grid.innerHTML = '';
-    el("emptyState").style.display = "block";
-    el("emptyState").textContent = "ডেটা লোড করা যায়নি। API_URL ঠিকভাবে সেট করা আছে কিনা দেখো।";
-    console.error(err);
-    return;
-  }
-  render();
-}
-
-/* ---------------- Rendering ---------------- */
-function matchesFilters(entry){
-  const isPriv = isPrivateEntry(entry);
-  if(activeCategory === "Private"){
-    if(!isPriv) return false;
-  } else {
-    if(isPriv) return false; // প্রাইভেট এন্ট্রি সাধারণ ক্যাটালগ/ক্যাটাগরি ভিউ-তে দেখাবে না
-    const catOk = activeCategory === "all" || entry.Category === activeCategory;
-    if(!catOk) return false;
-  }
-  if(!searchTerm) return true;
-  const hay = [entry.Name, entry.Year, entry.Country, entry.Language].join(" ").toLowerCase();
-  return hay.includes(searchTerm.toLowerCase());
-}
-
-function groupByYear(entries){
-  const map = new Map();
-  entries.forEach(entry=>{
-    const y = (entry.Year !== undefined && entry.Year !== null && String(entry.Year).trim() !== "")
-      ? String(entry.Year).trim() : "অজানা বছর";
-    if(!map.has(y)) map.set(y, []);
-    map.get(y).push(entry);
-  });
-  const years = Array.from(map.keys()).sort((a,b)=>{
-    const na = parseInt(a,10), nb = parseInt(b,10);
-    const aNum = !isNaN(na), bNum = !isNaN(nb);
-    if(aNum && bNum) return nb - na; // বেশি বছর আগে, কম পরে (2026 → 2023 → 2018)
-    if(aNum) return -1;
-    if(bNum) return 1;
-    return a.localeCompare(b);
-  });
-  return years.map(y => ({ year: y, entries: map.get(y).slice().reverse() }));
-}
-
-function posterStyle(entry){
-  return entry.Poster ? `background-image:url('${escapeAttr(entry.Poster)}');` : "";
-}
-
+/* ---------------- Helpers ---------------- */
 function escapeHtml(str){
   return String(str ?? "").replace(/[&<>"']/g, c => ({
     "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
   }[c]));
 }
 function escapeAttr(str){ return escapeHtml(str).replace(/'/g,"&#39;"); }
+function catLabel(cat){
+  if(cat === "Movie") return "মুভি";
+  if(cat === "Series") return "সিরিজ";
+  if(cat === "Natok") return "নাটক";
+  return cat || "";
+}
+function posterStyle(entry){
+  return entry.Poster ? `background-image:url('${escapeAttr(entry.Poster)}');` : "";
+}
 
+/* ---------------- Data loading ---------------- */
+async function loadPublicEntries(){
+  try{
+    const res = await fetch(API_URL, {method:"GET"});
+    const data = await res.json();
+    PUBLIC_ENTRIES = Array.isArray(data) ? data.filter(r => r.Name) : [];
+  }catch(err){
+    PUBLIC_ENTRIES = [];
+    console.error(err);
+  }
+  render();
+}
+
+async function loadPrivateEntries(passwordToUse){
+  try{
+    const res = await fetch(API_URL, {
+      method:"POST",
+      headers:{ "Content-Type":"text/plain;charset=utf-8" },
+      body: JSON.stringify({ action:"getPrivate", password: passwordToUse })
+    });
+    const data = await res.json();
+    if(data.success){
+      PRIVATE_ENTRIES = Array.isArray(data.entries) ? data.entries.filter(r => r.Name) : [];
+      return true;
+    }
+    return false;
+  }catch(err){
+    console.error(err);
+    return false;
+  }
+}
+
+/* ---------------- Filtering / grouping ---------------- */
+function matchesFilters(entry){
+  const catOk = activeCategory === "all" || entry.Category === activeCategory;
+  if(!catOk) return false;
+  if(!searchTerm) return true;
+  const hay = [entry.Name, entry.Year, entry.Country, entry.Language].join(" ").toLowerCase();
+  return hay.includes(searchTerm.toLowerCase());
+}
+
+function groupByYearDesc(entries){
+  const map = {};
+  entries.forEach(e=>{
+    const y = (e.Year || "অজানা").toString().trim();
+    if(!map[y]) map[y] = [];
+    map[y].push(e);
+  });
+  const years = Object.keys(map).sort((a,b)=>{
+    const na = parseInt(a,10), nb = parseInt(b,10);
+    const aNum = !isNaN(na), bNum = !isNaN(nb);
+    if(aNum && bNum) return nb - na;
+    if(aNum) return -1;
+    if(bNum) return 1;
+    return a.localeCompare(b);
+  });
+  return years.map(y => ({ year:y, items: map[y] }));
+}
+
+/* ---------------- Rendering ---------------- */
 function render(){
-  const filtered = ALL_ENTRIES.filter(matchesFilters);
+  el("sectionTitle").textContent = currentSection === "public" ? "ক্যাটালগ" : "🔒 প্রাইভেট সেকশন";
+  el("brandTag").textContent = currentSection === "public" ? "Movie · Series · Natok Catalog" : "Private Collection";
+
+  const output = el("catalogOutput");
+  const emptyState = el("emptyState");
+  const lockScreen = el("lockScreen");
+  const heroWrap = el("heroWrap");
+
+  // Private section but not unlocked (and not admin) -> show lock screen only
+  if(currentSection === "private" && !isAdmin && !privateUnlocked){
+    output.innerHTML = "";
+    output.style.display = "none";
+    emptyState.style.display = "none";
+    heroWrap.style.display = "none";
+    lockScreen.style.display = "block";
+    el("countTag").textContent = "লক করা আছে";
+    return;
+  }
+  lockScreen.style.display = "none";
+  output.style.display = "block";
+
+  const sourceEntries = currentSection === "public" ? PUBLIC_ENTRIES : PRIVATE_ENTRIES;
+  const filtered = sourceEntries.filter(matchesFilters);
   el("countTag").textContent = filtered.length + " এন্ট্রি";
 
-  // Hero = latest public (non-private) entry, only shown when no search/filter active
-  const heroWrap = el("heroWrap");
-  const publicEntries = ALL_ENTRIES.filter(e => !isPrivateEntry(e));
-  if(activeCategory === "all" && !searchTerm && publicEntries.length){
-    const latest = publicEntries[publicEntries.length - 1];
+  // Hero — latest overall entry in this section, only when no filter/search active
+  if(currentSection === "public" && activeCategory === "all" && !searchTerm && sourceEntries.length){
+    const latest = sourceEntries[sourceEntries.length - 1];
     heroWrap.style.display = "block";
     el("heroCard").innerHTML = `
       <div class="hero-poster" style="${posterStyle(latest)}">
@@ -661,71 +694,59 @@ function render(){
     heroWrap.style.display = "none";
   }
 
-  const grid = el("grid");
-  const emptyState = el("emptyState");
   if(!filtered.length){
-    grid.innerHTML = "";
+    output.innerHTML = "";
     emptyState.style.display = "block";
-    emptyState.textContent = activeCategory === "Private"
-      ? "প্রাইভেট সেকশনে এখনো কোনো এন্ট্রি যোগ করা হয়নি।"
-      : "কোনো এন্ট্রি পাওয়া যায়নি। সার্চ বা ফিল্টার পরিবর্তন করে দেখুন।";
+    emptyState.textContent = sourceEntries.length
+      ? "কোনো এন্ট্রি পাওয়া যায়নি। সার্চ বা ফিল্টার পরিবর্তন করে দেখো।"
+      : (currentSection === "private" ? "প্রাইভেট সেকশনে এখনো কোনো এন্ট্রি যোগ করা হয়নি।" : "এখনো কোনো এন্ট্রি যোগ করা হয়নি।");
     return;
   }
   emptyState.style.display = "none";
 
-  // বছর অনুযায়ী গ্রুপ করে উপর থেকে নিচে (নতুন → পুরনো) সাজানো
-  const groups = groupByYear(filtered);
-  let runningNo = filtered.length;
-  grid.innerHTML = groups.map(group => `
-    <div class="year-group">
-      <div class="year-group-head">
-        <span class="year-group-line"></span>
-        <h4>${escapeHtml(group.year)}</h4>
-        <span class="year-group-line"></span>
+  const groups = groupByYearDesc(filtered);
+  output.innerHTML = groups.map(g => `
+    <div class="year-block">
+      <div class="year-head">
+        <span class="display">${escapeHtml(g.year)}</span>
+        <span class="year-line"></span>
+        <span class="year-count">${g.items.length} এন্ট্রি</span>
       </div>
-      <div class="grid-inner">
-        ${group.entries.map(entry => {
-          const num = runningNo--;
-          return `
-          <div class="card" data-idx="${ALL_ENTRIES.indexOf(entry)}">
+      <div class="grid" data-year="${escapeAttr(g.year)}">
+        ${g.items.slice().reverse().map((entry, i) => `
+          <div class="card" data-year="${escapeAttr(g.year)}" data-i="${i}">
             <div class="card-poster" style="${posterStyle(entry)}">
-              <span class="entry-no">${String(num).padStart(2,"0")}</span>
+              <span class="entry-no">${String(g.items.length - i).padStart(2,"0")}</span>
               ${entry.Poster ? "" : `<div class="fallback-title">${escapeHtml(entry.Name)}</div>`}
               <span class="cat-tag">${escapeHtml(catLabel(entry.Category))}</span>
             </div>
             <div class="card-title">${escapeHtml(entry.Name)}</div>
-            <div class="card-sub">${escapeHtml(entry.Year)} · ${escapeHtml(entry.Country)}</div>
-          </div>`;
-        }).join("")}
+            <div class="card-sub">${escapeHtml(entry.Country)} · ${escapeHtml(entry.Language)}</div>
+          </div>
+        `).join("")}
       </div>
     </div>
   `).join("");
 
-  grid.querySelectorAll(".card").forEach(cardEl=>{
-    cardEl.addEventListener("click", () => {
-      const idx = Number(cardEl.dataset.idx);
-      openDetail(ALL_ENTRIES[idx]);
-    });
+  // wire clicks using the same grouped+reversed data
+  output.querySelectorAll(".card").forEach(cardEl=>{
+    const year = cardEl.dataset.year;
+    const i = Number(cardEl.dataset.i);
+    const group = groups.find(g => g.year === year);
+    const entry = group.items.slice().reverse()[i];
+    cardEl.addEventListener("click", () => openDetail(entry));
   });
-}
-
-function catLabel(cat){
-  if(cat === "Movie") return "মুভি";
-  if(cat === "Series") return "সিরিজ";
-  if(cat === "Natok") return "নাটক";
-  return cat || "";
 }
 
 /* ---------------- Detail modal ---------------- */
 function openDetail(entry){
-  el("detailTitle").textContent = entry.Name;
+  el("detailTitle").innerHTML = escapeHtml(entry.Name) + (entry.Section === "Private" ? '<span class="lock-tag">🔒 প্রাইভেট</span>' : "");
   el("detailMeta").innerHTML = `
     <span><strong>বছর:</strong> ${escapeHtml(entry.Year)}</span>
     <span><strong>দেশ:</strong> ${escapeHtml(entry.Country)}</span>
     <span><strong>ভাষা:</strong> ${escapeHtml(entry.Language)}</span>
     <span><strong>ক্যাটাগরি:</strong> ${escapeHtml(catLabel(entry.Category))}</span>
   `;
-
   const watchWrap = el("watchWrap");
   const watchUrl = entry.WatchLink || "";
   watchWrap.innerHTML = "";
@@ -733,11 +754,10 @@ function openDetail(entry){
     watchWrap.innerHTML = `<video controls src="${escapeAttr(watchUrl)}"></video>`;
   } else if(watchUrl){
     watchWrap.innerHTML = `<iframe src="${escapeAttr(watchUrl)}" allowfullscreen></iframe>
-      <div class="watch-fallback" style="position:absolute;bottom:8px;">যদি প্লেয়ার না দেখায়, নিচের "নতুন ট্যাবে দেখুন" বাটন ব্যবহার করো — কিছু হোস্টিং সাইট (যেমন Terabox) সরাসরি এমবেড ব্লক করে।</div>`;
+      <div class="watch-fallback" style="position:absolute;bottom:8px;">যদি প্লেয়ার না দেখায়, নিচের "নতুন ট্যাবে দেখুন" বাটন ব্যবহার করো — কিছু হোস্টিং সাইট সরাসরি এমবেড ব্লক করে।</div>`;
   } else {
     watchWrap.innerHTML = `<div class="watch-fallback">কোনো Watch লিংক দেওয়া নেই।</div>`;
   }
-
   el("watchLinkBtn").href = watchUrl || "#";
   el("downloadLinkBtn").href = entry.DownloadLink || "#";
   el("detailOverlay").classList.add("show");
@@ -745,23 +765,65 @@ function openDetail(entry){
 el("detailClose").onclick = () => el("detailOverlay").classList.remove("show");
 el("detailOverlay").addEventListener("click", e=>{ if(e.target === el("detailOverlay")) el("detailOverlay").classList.remove("show"); });
 
+/* ---------------- Section tabs ---------------- */
+el("sectionTabs").addEventListener("click", async e=>{
+  const btn = e.target.closest(".tab-btn");
+  if(!btn) return;
+  document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  currentSection = btn.dataset.section;
+
+  if(currentSection === "private"){
+    if(isAdmin && !PRIVATE_ENTRIES.length){
+      await loadPrivateEntries(adminPw);
+    } else if(privateUnlocked && !PRIVATE_ENTRIES.length){
+      await loadPrivateEntries(privatePw);
+    }
+  }
+  render();
+});
+
+el("unlockBtn").addEventListener("click", ()=>{
+  el("privateLoginOverlay").classList.add("show");
+});
+
 /* ---------------- Filters ---------------- */
 el("chipRow").addEventListener("click", e=>{
   const btn = e.target.closest(".chip");
   if(!btn) return;
-  const cat = btn.dataset.cat;
-  if(cat === "Private" && !isPrivateUnlocked()){
-    el("privateLoginOverlay").classList.add("show");
-    return; // পাসওয়ার্ড সঠিক না হওয়া পর্যন্ত ভিউ বদলাবে না
-  }
   document.querySelectorAll(".chip").forEach(c=>c.classList.remove("active"));
   btn.classList.add("active");
-  activeCategory = cat;
+  activeCategory = btn.dataset.cat;
   render();
 });
 el("searchInput").addEventListener("input", e=>{
   searchTerm = e.target.value.trim();
   render();
+});
+
+/* ---------------- Private section unlock (viewer) ---------------- */
+el("privateLoginClose").onclick = () => el("privateLoginOverlay").classList.remove("show");
+el("privateLoginOverlay").addEventListener("click", e=>{ if(e.target === el("privateLoginOverlay")) el("privateLoginOverlay").classList.remove("show"); });
+
+el("privateLoginSubmit").addEventListener("click", async ()=>{
+  const pass = el("privatePassword").value;
+  const msg = el("privateLoginMsg");
+  if(!pass){ msg.textContent = "পাসওয়ার্ড দাও।"; msg.className = "form-msg err"; return; }
+  msg.textContent = "যাচাই হচ্ছে..."; msg.className = "form-msg";
+  const ok = await loadPrivateEntries(pass);
+  if(ok){
+    privateUnlocked = true;
+    privatePw = pass;
+    sessionStorage.setItem("raPrivateUnlocked","1");
+    sessionStorage.setItem("raPrivatePw", pass);
+    el("privateLoginOverlay").classList.remove("show");
+    el("privatePassword").value = "";
+    msg.textContent = "";
+    render();
+  } else {
+    msg.textContent = "পাসওয়ার্ড ভুল।";
+    msg.className = "form-msg err";
+  }
 });
 
 /* ---------------- Admin login ---------------- */
@@ -776,8 +838,7 @@ el("loginSubmit").addEventListener("click", async ()=>{
   const pass = el("loginPassword").value;
   const msg = el("loginMsg");
   if(!pass){ msg.textContent = "পাসওয়ার্ড দাও।"; msg.className = "form-msg err"; return; }
-  msg.textContent = "যাচাই হচ্ছে...";
-  msg.className = "form-msg";
+  msg.textContent = "যাচাই হচ্ছে..."; msg.className = "form-msg";
   try{
     const res = await fetch(API_URL, {
       method:"POST",
@@ -787,8 +848,9 @@ el("loginSubmit").addEventListener("click", async ()=>{
     const data = await res.json();
     if(data.success){
       isAdmin = true;
-      sessionStorage.setItem("realArchiveAdmin","1");
-      sessionStorage.setItem("realArchivePw", pass); // used to sign the add-entry request this session
+      adminPw = pass;
+      sessionStorage.setItem("raAdmin","1");
+      sessionStorage.setItem("raAdminPw", pass);
       el("loginOverlay").classList.remove("show");
       el("loginPassword").value = "";
       msg.textContent = "";
@@ -804,8 +866,9 @@ el("loginSubmit").addEventListener("click", async ()=>{
   }
 });
 
-/* ---------------- Add entry ---------------- */
+/* ---------------- Add entry (admin) ---------------- */
 function openAddModal(){
+  el("fSection").value = currentSection === "private" ? "Private" : "Public";
   el("addOverlay").classList.add("show");
 }
 el("addClose").onclick = () => el("addOverlay").classList.remove("show");
@@ -815,7 +878,8 @@ el("addSubmit").addEventListener("click", async ()=>{
   const msg = el("addMsg");
   const payload = {
     action:"add",
-    password: sessionStorage.getItem("realArchivePw") || "",
+    password: adminPw,
+    section: el("fSection").value,
     name: el("fName").value.trim(),
     year: el("fYear").value.trim(),
     country: el("fCountry").value.trim(),
@@ -823,16 +887,14 @@ el("addSubmit").addEventListener("click", async ()=>{
     category: el("fCategory").value,
     watchLink: el("fWatch").value.trim(),
     downloadLink: el("fDownload").value.trim(),
-    poster: el("fPoster").value.trim(),
-    isPrivate: el("fPrivate").checked
+    poster: el("fPoster").value.trim()
   };
   if(!payload.name || !payload.year || !payload.country || !payload.language || !payload.watchLink || !payload.downloadLink){
     msg.textContent = "* চিহ্নিত সব ঘর পূরণ করো।";
     msg.className = "form-msg err";
     return;
   }
-  msg.textContent = "সংরক্ষণ হচ্ছে...";
-  msg.className = "form-msg";
+  msg.textContent = "সংরক্ষণ হচ্ছে..."; msg.className = "form-msg";
   try{
     const res = await fetch(API_URL, {
       method:"POST",
@@ -844,8 +906,9 @@ el("addSubmit").addEventListener("click", async ()=>{
       msg.textContent = "সংরক্ষিত হয়েছে!";
       msg.className = "form-msg ok";
       ["fName","fYear","fCountry","fLanguage","fWatch","fDownload","fPoster"].forEach(id => el(id).value = "");
-      el("fPrivate").checked = false;
-      await loadEntries();
+      await loadPublicEntries();
+      if(payload.section === "Private"){ await loadPrivateEntries(adminPw); }
+      render();
       setTimeout(()=> el("addOverlay").classList.remove("show"), 700);
     } else {
       msg.textContent = data.error || "সংরক্ষণ করা যায়নি।";
@@ -858,86 +921,36 @@ el("addSubmit").addEventListener("click", async ()=>{
   }
 });
 
-/* ---------------- Private section: viewing login ---------------- */
-el("privateLoginClose").onclick = () => el("privateLoginOverlay").classList.remove("show");
-el("privateLoginOverlay").addEventListener("click", e=>{ if(e.target === el("privateLoginOverlay")) el("privateLoginOverlay").classList.remove("show"); });
-
-el("privateLoginSubmit").addEventListener("click", async ()=>{
-  const pass = el("privateLoginPassword").value;
-  const msg = el("privateLoginMsg");
-  if(!pass){ msg.textContent = "পাসওয়ার্ড দাও।"; msg.className = "form-msg err"; return; }
-  msg.textContent = "যাচাই হচ্ছে...";
-  msg.className = "form-msg";
+/* ---------------- Set / change private section password (admin) ---------------- */
+el("setPrivatePassBtn").addEventListener("click", async ()=>{
+  const msg = el("privatePassMsg");
+  const newPass = el("fPrivatePassNew").value;
+  if(!newPass){ msg.textContent = "নতুন পাসওয়ার্ড লিখো।"; msg.className = "form-msg err"; return; }
+  msg.textContent = "সেভ হচ্ছে..."; msg.className = "form-msg";
   try{
     const res = await fetch(API_URL, {
       method:"POST",
       headers:{ "Content-Type":"text/plain;charset=utf-8" },
-      body: JSON.stringify({ action:"verifyPrivate", password: pass })
+      body: JSON.stringify({ action:"setPrivatePassword", password: adminPw, newPassword: newPass })
     });
     const data = await res.json();
     if(data.success){
-      sessionStorage.setItem("realArchivePrivatePw", pass);
-      el("privateLoginOverlay").classList.remove("show");
-      el("privateLoginPassword").value = "";
-      msg.textContent = "";
-      await loadEntries(); // এখন থেকে প্রাইভেট এন্ট্রিসহ ডেটা লোড হবে
-      document.querySelectorAll(".chip").forEach(c=>c.classList.remove("active"));
-      el("privateChip").classList.add("active");
-      activeCategory = "Private";
-      render();
-    } else {
-      msg.textContent = "পাসওয়ার্ড ভুল।";
-      msg.className = "form-msg err";
-    }
-  }catch(err){
-    msg.textContent = "সংযোগ করা যায়নি। API_URL চেক করো।";
-    msg.className = "form-msg err";
-    console.error(err);
-  }
-});
-
-/* ---------------- Private section: password set/change (admin only) ---------------- */
-el("openSetPrivateBtn").addEventListener("click", ()=>{
-  el("addOverlay").classList.remove("show");
-  el("setPrivateOverlay").classList.add("show");
-});
-el("setPrivateClose").onclick = () => el("setPrivateOverlay").classList.remove("show");
-el("setPrivateOverlay").addEventListener("click", e=>{ if(e.target === el("setPrivateOverlay")) el("setPrivateOverlay").classList.remove("show"); });
-
-el("setPrivateSubmit").addEventListener("click", async ()=>{
-  const newPw = el("fNewPrivatePw").value;
-  const msg = el("setPrivateMsg");
-  if(!newPw){ msg.textContent = "নতুন পাসওয়ার্ড দাও।"; msg.className = "form-msg err"; return; }
-  msg.textContent = "সংরক্ষণ হচ্ছে...";
-  msg.className = "form-msg";
-  try{
-    const res = await fetch(API_URL, {
-      method:"POST",
-      headers:{ "Content-Type":"text/plain;charset=utf-8" },
-      body: JSON.stringify({
-        action:"setPrivatePassword",
-        adminPassword: sessionStorage.getItem("realArchivePw") || "",
-        newPassword: newPw
-      })
-    });
-    const data = await res.json();
-    if(data.success){
-      msg.textContent = "প্রাইভেট পাসওয়ার্ড সেট হয়েছে!";
+      msg.textContent = "প্রাইভেট পাসওয়ার্ড আপডেট হয়েছে।";
       msg.className = "form-msg ok";
-      el("fNewPrivatePw").value = "";
+      el("fPrivatePassNew").value = "";
     } else {
-      msg.textContent = data.error || "সংরক্ষণ করা যায়নি।";
+      msg.textContent = data.error || "আপডেট করা যায়নি।";
       msg.className = "form-msg err";
     }
   }catch(err){
-    msg.textContent = "সংযোগ করা যায়নি। API_URL চেক করো।";
+    msg.textContent = "সংযোগ করা যায়নি।";
     msg.className = "form-msg err";
     console.error(err);
   }
 });
 
 /* ---------------- Init ---------------- */
-loadEntries();
+loadPublicEntries();
 </script>
 </body>
 </html>
