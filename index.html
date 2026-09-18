@@ -361,6 +361,53 @@
 
   .card-tags{font-size:11px;color:var(--gold-dim);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 
+  /* ---------- Sidebar (Year / Tags / Cast facets) ---------- */
+  .layout-grid{
+    display:grid;
+    grid-template-columns:220px 1fr;
+    gap:34px;
+    align-items:start;
+  }
+  .sidebar{
+    position:sticky;
+    top:150px;
+    display:flex;
+    flex-direction:column;
+    gap:22px;
+  }
+  .facet-block h4{
+    font-size:12.5px;
+    color:var(--gold);
+    letter-spacing:.03em;
+    margin-bottom:10px;
+    border-bottom:1px solid var(--line);
+    padding-bottom:6px;
+  }
+  .facet-select{
+    width:100%;
+    background:var(--ink);
+    border:1px solid var(--line);
+    color:var(--text);
+    padding:9px 10px;
+    font-family:'Work Sans',sans-serif;
+    font-size:13px;
+    border-radius:var(--radius);
+    cursor:pointer;
+  }
+  .facet-select:focus{outline:1px solid var(--gold);border-color:var(--gold);}
+  .facet-select option{background:var(--panel-2);color:var(--text);}
+
+  @media (max-width:900px){
+    .layout-grid{grid-template-columns:1fr;}
+    .sidebar{
+      position:static;
+      flex-direction:row;
+      flex-wrap:wrap;
+      gap:14px;
+    }
+    .facet-block{flex:1;min-width:150px;}
+  }
+
   .settings-block{
     margin-top:26px;
     padding-top:20px;
@@ -406,6 +453,7 @@
         <input type="text" id="searchInput" placeholder="নাম, বছর, দেশ বা ভাষা দিয়ে খুঁজুন...">
       </div>
       <button class="btn" id="adminBtn">অ্যাডমিন</button>
+      <button class="btn btn-ghost btn-sm" id="logoutBtn" style="display:none;">লগআউট</button>
     </div>
   </div>
 
@@ -419,6 +467,7 @@
     <button class="chip" data-cat="Movie">মুভি</button>
     <button class="chip" data-cat="Series">সিরিজ</button>
     <button class="chip" data-cat="Natok">নাটক</button>
+    <button class="chip" data-cat="Others">অন্যান্য</button>
   </div>
 </header>
 
@@ -428,21 +477,40 @@
 </div>
 
 <main>
-  <div class="section-head">
-    <h3 id="sectionTitle">ক্যাটালগ</h3>
-    <span class="count-tag" id="countTag">0 এন্ট্রি</span>
+  <div class="layout-grid">
+    <aside class="sidebar" id="sidebar">
+      <div class="facet-block">
+        <h4>বছর অনুযায়ী</h4>
+        <select class="facet-select" id="yearFacetSelect"></select>
+      </div>
+      <div class="facet-block">
+        <h4>জেনার / ট্যাগ</h4>
+        <select class="facet-select" id="tagFacetSelect"></select>
+      </div>
+      <div class="facet-block">
+        <h4>অভিনয়শিল্পী</h4>
+        <select class="facet-select" id="castFacetSelect"></select>
+      </div>
+    </aside>
+
+    <div class="content-col">
+      <div class="section-head">
+        <h3 id="sectionTitle">ক্যাটালগ</h3>
+        <span class="count-tag" id="countTag">0 এন্ট্রি</span>
+      </div>
+
+      <div id="catalogOutput"></div>
+
+      <div class="lock-screen" id="lockScreen" style="display:none;">
+        <div class="lock-icon">🔒</div>
+        <h3>প্রাইভেট সেকশন</h3>
+        <p>এই সেকশনের ভিডিও দেখতে আলাদা পাসওয়ার্ড দরকার।</p>
+        <button class="btn btn-gold" id="unlockBtn">পাসওয়ার্ড দিয়ে আনলক করো</button>
+      </div>
+
+      <div class="empty-state" id="emptyState" style="display:none;"></div>
+    </div>
   </div>
-
-  <div id="catalogOutput"></div>
-
-  <div class="lock-screen" id="lockScreen" style="display:none;">
-    <div class="lock-icon">🔒</div>
-    <h3>প্রাইভেট সেকশন</h3>
-    <p>এই সেকশনের ভিডিও দেখতে আলাদা পাসওয়ার্ড দরকার।</p>
-    <button class="btn btn-gold" id="unlockBtn">পাসওয়ার্ড দিয়ে আনলক করো</button>
-  </div>
-
-  <div class="empty-state" id="emptyState" style="display:none;"></div>
 </main>
 
 <footer>রিল আর্কাইভ — শুধুমাত্র নিজের তৈরি বা বৈধভাবে শেয়ারযোগ্য কনটেন্টের জন্য।</footer>
@@ -542,6 +610,7 @@
           <option value="Movie">মুভি</option>
           <option value="Series">সিরিজ</option>
           <option value="Natok">নাটক</option>
+          <option value="Others">অন্যান্য</option>
         </select>
       </div>
       <div class="field tag-field-wrap">
@@ -589,17 +658,21 @@
    CONFIG — এই লাইনটা নিজের Google Apps Script Web App URL দিয়ে বদলে দাও।
    README.md ফাইলে ধাপে ধাপে সেটআপ নির্দেশনা দেওয়া আছে।
    ========================================================================= */
-const API_URL = "https://script.google.com/macros/s/AKfycbxeuVPUMHdH7bzfGpI2pjJN_UytxxsEPTjlUrfOyubkZUkL_ZdMoY_wk63CAFnxPqPc4w/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbzPT0_CLjbFMOAglXZIfMCrZH3g1QuUmSdEmNVslQikHRUaEO57dy-F2Uu0HQx_gz6kMw/exec";
 
 let PUBLIC_ENTRIES = [];
 let PRIVATE_ENTRIES = [];
 let currentSection = "public";       // "public" | "private"
 let activeCategory = "all";
+let activeYear = "all";
+let activeTag = "all";
+let activeCast = "all";
 let searchTerm = "";
-let isAdmin = sessionStorage.getItem("raAdmin") === "1";
-let adminPw = sessionStorage.getItem("raAdminPw") || "";
-let privateUnlocked = sessionStorage.getItem("raPrivateUnlocked") === "1";
-let privatePw = sessionStorage.getItem("raPrivatePw") || "";
+let isAdmin = localStorage.getItem("raAdmin") === "1";
+let adminPw = localStorage.getItem("raAdminPw") || "";
+let privateUnlocked = localStorage.getItem("raPrivateUnlocked") === "1";
+let privatePw = localStorage.getItem("raPrivatePw") || "";
+let publicLoadDone = false;
 
 const el = id => document.getElementById(id);
 
@@ -614,6 +687,7 @@ function catLabel(cat){
   if(cat === "Movie") return "মুভি";
   if(cat === "Series") return "সিরিজ";
   if(cat === "Natok") return "নাটক";
+  if(cat === "Others") return "অন্যান্য";
   return cat || "";
 }
 function posterStyle(entry){
@@ -621,15 +695,36 @@ function posterStyle(entry){
 }
 
 /* ---------------- Data loading ---------------- */
+const PUBLIC_CACHE_KEY = "raPublicCache";
+
+function renderFromLocalCache(){
+  try{
+    const raw = localStorage.getItem(PUBLIC_CACHE_KEY);
+    if(!raw) return false;
+    const parsed = JSON.parse(raw);
+    if(Array.isArray(parsed.data) && parsed.data.length){
+      PUBLIC_ENTRIES = parsed.data;
+      render();
+      return true;
+    }
+  }catch(err){ /* cache নষ্ট থাকলে চুপচাপ উপেক্ষা করো */ }
+  return false;
+}
+
 async function loadPublicEntries(){
+  // আগে যা ক্যাশ করা আছে সেটা সাথে সাথে দেখাও, তারপর ব্যাকগ্রাউন্ডে নতুন ডেটা আনো —
+  // এতে সাইট খোলার সাথে সাথেই মুভি দেখা যায়, Apps Script-এর রেসপন্সের জন্য অপেক্ষা করতে হয় না।
+  const hadCache = renderFromLocalCache();
   try{
     const res = await fetch(API_URL, {method:"GET"});
     const data = await res.json();
     PUBLIC_ENTRIES = Array.isArray(data) ? data.filter(r => r.Name) : [];
+    try{ localStorage.setItem(PUBLIC_CACHE_KEY, JSON.stringify({ ts: Date.now(), data: PUBLIC_ENTRIES })); }catch(e){}
   }catch(err){
-    PUBLIC_ENTRIES = [];
+    if(!hadCache){ PUBLIC_ENTRIES = []; }
     console.error(err);
   }
+  publicLoadDone = true;
   render();
 }
 
@@ -656,9 +751,35 @@ async function loadPrivateEntries(passwordToUse){
 function matchesFilters(entry){
   const catOk = activeCategory === "all" || entry.Category === activeCategory;
   if(!catOk) return false;
+
+  if(activeYear !== "all"){
+    const y = (entry.Year || "অজানা").toString().trim();
+    if(y !== activeYear) return false;
+  }
+  if(activeTag !== "all"){
+    const tags = (entry.Tags || "").split(",").map(t=>t.trim().toLowerCase());
+    if(!tags.includes(activeTag.toLowerCase())) return false;
+  }
+  if(activeCast !== "all"){
+    const cast = (entry.Cast || "").split(",").map(t=>t.trim().toLowerCase());
+    if(!cast.includes(activeCast.toLowerCase())) return false;
+  }
+
   if(!searchTerm) return true;
   const hay = [entry.Name, entry.Year, entry.Country, entry.Language, entry.Tags, entry.Cast].join(" ").toLowerCase();
   return hay.includes(searchTerm.toLowerCase());
+}
+
+// ক্যাটাগরি আর সার্চ অনুযায়ী ফিল্টার করা এন্ট্রি — সাইডবারের কাউন্ট হিসাব করতে ব্যবহার হয়
+// (বছর/ট্যাগ/কাস্ট ফিল্টার এখানে ধরা হয় না, যাতে অন্য অপশনগুলোর সংখ্যা ঠিকভাবে দেখা যায়)
+function categorySearchFiltered(entries){
+  return entries.filter(e=>{
+    const catOk = activeCategory === "all" || e.Category === activeCategory;
+    if(!catOk) return false;
+    if(!searchTerm) return true;
+    const hay = [e.Name, e.Year, e.Country, e.Language, e.Tags, e.Cast].join(" ").toLowerCase();
+    return hay.includes(searchTerm.toLowerCase());
+  });
 }
 
 function groupByYearDesc(entries){
@@ -679,8 +800,58 @@ function groupByYearDesc(entries){
   return years.map(y => ({ year:y, items: map[y] }));
 }
 
+/* ---------------- Sidebar facets (Year / Tags / Cast) — dropdown selects ---------------- */
+function sortYearEntries(counts){
+  return Object.entries(counts).sort((a,b)=>{
+    const na = parseInt(a[0],10), nb = parseInt(b[0],10);
+    const aNum = !isNaN(na), bNum = !isNaN(nb);
+    if(aNum && bNum) return nb - na;
+    if(aNum) return -1;
+    if(bNum) return 1;
+    return a[0].localeCompare(b[0]);
+  });
+}
+function sortAlphaEntries(counts){
+  return Object.entries(counts).sort((a,b)=> a[0].localeCompare(b[0]));
+}
+
+function renderFacetSelect(selectId, sortedEntries, activeVal, onPick){
+  const selectEl = el(selectId);
+  let html = `<option value="all">সব দেখাও</option>`;
+  html += sortedEntries.map(([val,count]) =>
+    `<option value="${escapeAttr(val)}">${escapeHtml(val)} (${count})</option>`
+  ).join("");
+  selectEl.innerHTML = html;
+  selectEl.value = activeVal; // যদি আগের সিলেকশনটা এখনো তালিকায় থাকে, সেটাই বেছে রাখবে
+  selectEl.onchange = () => onPick(selectEl.value);
+}
+
+function renderSidebar(){
+  const source = currentSection === "public" ? PUBLIC_ENTRIES : PRIVATE_ENTRIES;
+  const base = categorySearchFiltered(source);
+
+  const yearCounts = {};
+  base.forEach(e=>{
+    const y = (e.Year || "অজানা").toString().trim();
+    yearCounts[y] = (yearCounts[y] || 0) + 1;
+  });
+  const tagCounts = {};
+  base.forEach(e=>{
+    (e.Tags || "").split(",").forEach(t=>{ t = t.trim(); if(t) tagCounts[t] = (tagCounts[t] || 0) + 1; });
+  });
+  const castCounts = {};
+  base.forEach(e=>{
+    (e.Cast || "").split(",").forEach(t=>{ t = t.trim(); if(t) castCounts[t] = (castCounts[t] || 0) + 1; });
+  });
+
+  renderFacetSelect("yearFacetSelect", sortYearEntries(yearCounts), activeYear, (val)=>{ activeYear = val; render(); });
+  renderFacetSelect("tagFacetSelect", sortAlphaEntries(tagCounts), activeTag, (val)=>{ activeTag = val; render(); });
+  renderFacetSelect("castFacetSelect", sortAlphaEntries(castCounts), activeCast, (val)=>{ activeCast = val; render(); });
+}
+
 /* ---------------- Rendering ---------------- */
 function render(){
+  renderSidebar();
   el("sectionTitle").textContent = currentSection === "public" ? "ক্যাটালগ" : "🔒 প্রাইভেট সেকশন";
   el("brandTag").textContent = currentSection === "public" ? "Movie · Series · Natok Catalog" : "Private Collection";
 
@@ -731,9 +902,13 @@ function render(){
   if(!filtered.length){
     output.innerHTML = "";
     emptyState.style.display = "block";
-    emptyState.textContent = sourceEntries.length
-      ? "কোনো এন্ট্রি পাওয়া যায়নি। সার্চ বা ফিল্টার পরিবর্তন করে দেখো।"
-      : (currentSection === "private" ? "প্রাইভেট সেকশনে এখনো কোনো এন্ট্রি যোগ করা হয়নি।" : "এখনো কোনো এন্ট্রি যোগ করা হয়নি।");
+    if(currentSection === "public" && !publicLoadDone && !sourceEntries.length){
+      emptyState.textContent = "লোড হচ্ছে...";
+    } else {
+      emptyState.textContent = sourceEntries.length
+        ? "কোনো এন্ট্রি পাওয়া যায়নি। সার্চ বা ফিল্টার পরিবর্তন করে দেখো।"
+        : (currentSection === "private" ? "প্রাইভেট সেকশনে এখনো কোনো এন্ট্রি যোগ করা হয়নি।" : "এখনো কোনো এন্ট্রি যোগ করা হয়নি।");
+    }
     return;
   }
   emptyState.style.display = "none";
@@ -829,6 +1004,9 @@ el("sectionTabs").addEventListener("click", async e=>{
   document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
   btn.classList.add("active");
   currentSection = btn.dataset.section;
+  activeYear = "all";
+  activeTag = "all";
+  activeCast = "all";
 
   if(currentSection === "private"){
     if(isAdmin && !PRIVATE_ENTRIES.length){
@@ -871,11 +1049,12 @@ el("privateLoginSubmit").addEventListener("click", async ()=>{
   if(ok){
     privateUnlocked = true;
     privatePw = pass;
-    sessionStorage.setItem("raPrivateUnlocked","1");
-    sessionStorage.setItem("raPrivatePw", pass);
+    localStorage.setItem("raPrivateUnlocked","1");
+    localStorage.setItem("raPrivatePw", pass);
     el("privateLoginOverlay").classList.remove("show");
     el("privatePassword").value = "";
     msg.textContent = "";
+    updateAuthButtons();
     render();
   } else {
     msg.textContent = "পাসওয়ার্ড ভুল।";
@@ -884,6 +1063,24 @@ el("privateLoginSubmit").addEventListener("click", async ()=>{
 });
 
 /* ---------------- Admin login ---------------- */
+function updateAuthButtons(){
+  el("adminBtn").textContent = isAdmin ? "অ্যাডমিন প্যানেল" : "অ্যাডমিন";
+  el("logoutBtn").style.display = (isAdmin || privateUnlocked) ? "inline-block" : "none";
+}
+el("logoutBtn").addEventListener("click", ()=>{
+  isAdmin = false; adminPw = "";
+  privateUnlocked = false; privatePw = "";
+  localStorage.removeItem("raAdmin");
+  localStorage.removeItem("raAdminPw");
+  localStorage.removeItem("raPrivateUnlocked");
+  localStorage.removeItem("raPrivatePw");
+  PRIVATE_ENTRIES = [];
+  if(currentSection === "private"){
+    document.querySelector('.tab-btn[data-section="public"]').click();
+  }
+  updateAuthButtons();
+  render();
+});
 el("adminBtn").addEventListener("click", ()=>{
   if(isAdmin){ openAddModal(); }
   else { el("loginOverlay").classList.add("show"); }
@@ -906,11 +1103,12 @@ el("loginSubmit").addEventListener("click", async ()=>{
     if(data.success){
       isAdmin = true;
       adminPw = pass;
-      sessionStorage.setItem("raAdmin","1");
-      sessionStorage.setItem("raAdminPw", pass);
+      localStorage.setItem("raAdmin","1");
+      localStorage.setItem("raAdminPw", pass);
       el("loginOverlay").classList.remove("show");
       el("loginPassword").value = "";
       msg.textContent = "";
+      updateAuthButtons();
       openAddModal();
     } else {
       msg.textContent = "পাসওয়ার্ড ভুল।";
@@ -1080,6 +1278,7 @@ setupTagAutocomplete("fTags", "tagsSuggest", "Tags");
 setupTagAutocomplete("fCast", "castSuggest", "Cast");
 
 /* ---------------- Init ---------------- */
+updateAuthButtons();
 loadPublicEntries();
 </script>
 </body>
